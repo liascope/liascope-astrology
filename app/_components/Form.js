@@ -127,7 +127,7 @@ return (
      <div> 
       <h3 className="text-center mb-2">{selectedType} Information</h3>
     <label htmlFor="moment">{selectedType === 'Partner' ? selectedType : 'Transit Moment:'}</label> 
-    <input {...register("moment")} id="moment" type="text" placeholder={`${selectedType === 'Partner' ? 'Partner name' : 'transit moment'}`} required/> 
+    <input {...register("moment")} id="moment" type="text" placeholder={`${selectedType === 'Partner' ? 'Partner name' : 'Transit Moment'}`} required/> 
     <label htmlFor="transitDate">{selectedType === 'Partner' ? 'Birth Date' : 'Transit Date:'}</label> 
     <input type="date" {...register("transitDate", {validate: validateDate })} id='transitDate' required/> 
     <label htmlFor="transitTime">{selectedType === 'Partner' ? 'Birth Time' : 'Transit Time:'}</label> 

@@ -20,7 +20,7 @@ export default function ChartsLayout({ children }) {
           </ToggleAspectListBtn>
         <ChartsWrapper>{children}</ChartsWrapper>
       </div>
-      <div className="w-full min-[1625px]:w-[20%] max-[1625px]:flex-row max-[700px]:flex-col z-10 flex flex-col">
+      <div className="w-full min-[1625px]:w-[20%] max-[1625px]:flex-row max-[700px]:flex-col z-10 flex flex-col mr-10">
         <NatalTransitInfo />
         <Navigation />
       </div>
