@@ -12,5 +12,5 @@ export default function ChartCircle(){
   <path d="M15 75
            A60 60 0 0 1 75 15"
         stroke="#4fa091" />
-</svg>)
+</svg>) 
 }

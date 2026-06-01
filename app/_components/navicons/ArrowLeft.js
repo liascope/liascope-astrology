@@ -10,4 +10,4 @@ export default function ArrowLeft (){
             <polyline points="21,3 3,12 21,20 15,12 21,3" />
           </g>
         </svg>)
-}
+} 

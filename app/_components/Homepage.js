@@ -35,7 +35,7 @@ import Sun from "./navicons/Sun";
         )}</div>
 
           {/* small screen: */}
-       <div className="flex lg:hidden md:text-base flex-col items-center mt-6 min-h-screen w-full sm:text-sm text-xs gap-6">
+       <div className="px-2 flex lg:hidden md:text-base flex-col items-center mt-6 min-h-screen w-full sm:text-sm text-xs gap-6">
  <div className="grid grid-rows-3 gap-4 w-full">
       {orderedGroups.map((group, rowIndex) => (
         <div

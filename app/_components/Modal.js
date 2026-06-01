@@ -9,7 +9,7 @@ export default function Modal({ isOpen, onClose }) {
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
-  }, []);
+  }, []); 
   if (!isOpen || !mounted) return null;
   return createPortal(
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
