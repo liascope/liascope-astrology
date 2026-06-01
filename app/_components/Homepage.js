@@ -9,11 +9,15 @@ import Sun from "./navicons/Sun";
   ["Transit Chart", "Draconic Chart"],
   ["Progressed Chart", "Perfection Chart"]
 ];
-  return  <main className="px-7 md:p-0">  <h2 className="text-[#e89b53] lg:text-xl text-md text-center md:mb-30 md:mt-5"> A quick & precise way to get an insight of the most important astrological charts of your scope.
+  return  <main className="flex flex-col items-center justify-center">  <h2 className="text-[#e89b53] lg:text-xl text-md text-center md:mt-5"> A quick & precise way to get an insight of the most important astrological charts of your scope.
       </h2> 
       
-      <div className="lg:flex hidden items-center justify-center top-0 tracking-wider relative min-h-screen min-w-screen lg:pb-100">  
-      <Button type="openForm"><div className="btnEffect flex flex-row items-center">Your<Sun/>Scope</div> </Button>
+      <div className="lg:flex hidden items-center justify-center tracking-wider relative mb-28 min-h-[750px] min-w-screen">  
+
+    
+        
+        <Button type="openForm">
+        <div className="btnEffect flex flex-row items-center">Your<Sun/>Scope</div> </Button>
 
         {items.map((item, i) => {
           const angle = (360 / items.length) * i;
