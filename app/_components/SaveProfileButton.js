@@ -43,7 +43,6 @@ export default function SaveProfileButton() {
     localStorage.setItem('liascope-profiles', JSON.stringify(existing));
     setStatus("saved");
 
-    console.log(newProfileId)
   }
 
   return (

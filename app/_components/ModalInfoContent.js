@@ -1,4 +1,5 @@
 import { items, intro } from "@/app/_lib/data";
+import { actualYear } from "../_lib/config";
 
 export default function ModalInfoContent() {
   return (
@@ -20,7 +21,7 @@ export default function ModalInfoContent() {
       ))}
       <p className="text-xs text-gray-600 py-5">
         Liascope is for informational and entertainment purposes only. <br />
-        © 2025 Liascope | Developed & Created with ✨ All rights reserved.
+        © {actualYear} Liascope | Developed & Created with ✨ All rights reserved.
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+
 function cnvCalendar( JD ){
 	JD += 0.5;
 	var Z = Math.floor( JD );
@@ -28,8 +29,8 @@ function cnvCalendar( JD ){
 	return res;
 }
 
-// ���̓��̃����E�X�����v�Z����
-function calJD(ye, mo, da, ho, mi){ // �����̏�
+// その日のユリウス日を計算する
+function calJD(ye, mo, da, ho, mi){ // 実数体上
 	var y0 = (mo > 2) ? ye : (ye -  1);
 	var m0 = (mo > 2) ? mo : (mo + 12);
 	var JD = Math.floor(365.25 * y0) + Math.floor(y0 / 400) - Math.floor(y0 / 100);
@@ -39,7 +40,7 @@ function calJD(ye, mo, da, ho, mi){ // �����̏�
 	return JD;
 }
 
-function cnvJDr( JD ){ // �����́�������
+function cnvJDr( JD ){ // 実数体→整数環
 	var date = cnvCalendar(JD);
 	var ye = date[ 0 ];
 	var mo = date[ 1 ];
@@ -49,7 +50,7 @@ function cnvJDr( JD ){ // �����́�������
 	return JDz;
 }
 
-function calJDz(year, month, day){ // ������
+function calJDz(year, month, day){ // 整数環上
 	var yt = year;
 	var mt = month;
 	var dt = day;
@@ -66,7 +67,7 @@ function calJDz(year, month, day){ // ������
 	return JD;
 }
 
-// d, T��z��ŕԂ��B
+// d, Tを配列で返す。
 function calTimeCoefficient( JD ){
 	var d = JD - 2451545.0;
 	var T = d / 36525.0;
@@ -75,6 +76,17 @@ function calTimeCoefficient( JD ){
 	return coef;
 }
 
+// 軌道要素６パラ版→通常の軌道要素
+// a : semi-major axis (au).
+// l : mean longitude (degree).
+// h : e * sin(pi).
+// k : e * cos(pi).
+// p : g * sin(om).
+// q : g * cos(om).
+// e : eccentricity.
+// g : sine of the half inclination.
+// pi: longitude of the perihelion.
+// om: longitude of the ascending node.
 function convertOrbitalElement( a, l, h, k, p, q ) {
 	var L = l;
 	var e = Math.sqrt( h * h + k * k );
@@ -87,7 +99,7 @@ function convertOrbitalElement( a, l, h, k, p, q ) {
 	return result;
 }
 
-
+// まとめて軌道計算。返値は（黄経、黄緯、動径）。
 function orbitWork(L, opi, omg, i, e, a){
 	var M = mod360(L - opi);
 	var E = mod360(solveKepler(M, e));
@@ -109,7 +121,7 @@ function orbitWork(L, opi, omg, i, e, a){
 	return res;
 }
 
-// Kepler������(M = E - e sinE)�������B
+// Kepler方程式(M = E - e sinE)を解く。
 function solveKepler(M, e){
 	var Mr = M * deg2rad;
 	var Er = Mr;
@@ -121,7 +133,7 @@ function solveKepler(M, e){
 	return Er / deg2rad;
 }
 
-// ���S�ʒu����n�S�ʒu�փR���o�[�g���A�n�S���o��Ԃ��B
+// 日心位置から地心位置へコンバートし、地心黄経を返す。
 function convertGeocentric( earthCoor, planetCoor ){
 	var lp, bp, rp, ls, bs, rs;
 
@@ -153,7 +165,7 @@ function convertGeocentric( earthCoor, planetCoor ){
 	return res;
 }
 
-// �������W�n����ԓ����W�n�֕ϊ�����B
+// 黄道座標系から赤道座標系へ変換する。
 function convertEquatorial(lon, lat, obl){
 	var xs = cos4deg(lon) * cos4deg(lat);
 	var ys = sin4deg(lon) * cos4deg(lat);
@@ -171,7 +183,7 @@ function convertEquatorial(lon, lat, obl){
 	return res;
 }
 
-// �΍��␳
+// 歳差補正
 function coordinateConvertFromJ2000( arg ){
 	var zeta, zz, theta;
 	var x, y, z, xd, yd, zd, xs, ys, zs;
@@ -206,18 +218,19 @@ function coordinateConvertFromJ2000( arg ){
 	return res;
 }
 
-
-function calLST(JD, ho, mi, lo){
+// 地方恒星時計算
+function calLST_old(JD, ho, mi, lo){
 	var JD0 = Math.floor(JD - 0.5) + 0.5;
 	var T = (JD0 - 2451545.0) / 36525.0;
 	var UT = (JD - JD0) * 360.0 * 1.002737909350795;
 	if( UT < 0 ) UT += 360.0;
 
+	//グリニッジ恒星時計算
 	var GST  = 0.279057273 + 100.0021390378 * T + 1.077591667e-06 * T * T;
 	    GST  = GST - Math.floor(GST);
 	    GST *= 360.0;
 
-
+	// 地方恒星時計算＋章動補正
 	var LST = mod360(GST + UT + lo);
 	var dpsi = calNutation(JD);
 	var eps  = calOblique(JD);
@@ -227,8 +240,41 @@ function calLST(JD, ho, mi, lo){
 	return LST;
 }
 
+// いまどきの地方恒星時計算
+function calLST(JDut, ho, mi, lo) {
+	const Du = JDut - 2451545.0;
 
-function calOblique(JD ){
+	const JDtt = JDut + correctTDT( JDut );
+	const T = (JDtt - 2451545.0) / 36525.0;
+
+	// Earth Rotation Angle
+	let theta = 0.7790572732640 + 1.00273781191135448 * Du;
+	theta = theta - Math.floor(theta);
+
+	// Greenwich mean sidereal time
+	const GMST = 86400.0 * theta + (0.014506 + T * (4612.156534 + T * (1.3915817 - 0.00000044 * T))) / 15.0;
+
+	// Greenwich apparent sidereal time
+	const dpsi = calNutation(JDtt);
+	const eps  = calOblique(JDtt);
+	const GAST = GMST + dpsi * cos4deg(eps) / 15.0;
+
+	// Local apparent sidereal time in timely seconds
+	const LAST = GAST + 3600.0 * lo / 15.0;
+
+	// Local apparent sidereal time in degrees
+	let LASTd = LAST / ( 4.0 * 60.0 );
+	if (LASTd < 0.0) {
+		LASTd += 360.0;
+	} else if( LASTd >= 360.0 ){
+		LASTd -= 360.0;
+	}
+
+	return LASTd;
+}
+
+// 黄道傾斜角を計算する関数
+function calOblique_old(JD ){
 	var T = (JD - 2451545.0) / 36525.0;
 	var Omg = mod360(125.00452 - T *   1934.136261);
 	var Ls  = mod360(280.4665  + T *  36000.7698);
@@ -243,24 +289,50 @@ function calOblique(JD ){
 	return (e + deps) / 3600.0;
 }
 
+function calOblique( JD ){
+	const T = (JD - 2451545.0) / 36525.0;
+	const Omg = (125.00452 - T *   1934.136261) * deg2rad;
+	const Ls  = (280.4665  + T *  36000.7698) * deg2rad;
+	const Lm  = (218.3165  + T * 481267.8813) * deg2rad;
 
+	const e = 84381.406 + T * (-46.836769 + T * (-0.0001831 + T * 0.00200340));
+	const C0 = [ 9.205, 0.573, 0.098, -0.089 ];
+	const C1 = [ 0.001, 0.000, 0.000,  0.000 ];
+	const S0 = [ 0.002, 0.000, 0.000,  0.000 ];
+	const th = [ 1.0 * Omg, 2.0 * Ls, 2.0 * Lm, 2.0 * Omg ];
+
+	let deps = 0.0;
+	for( let i = 0; i < th.length; i++ ){
+		deps += (C0[i] + C1[i] * T) * Math.cos(th[i]) + S0[i] * Math.sin(th[i]);
+	}
+
+	return (e + deps) / 3600.0;
+}
+
+// 章動を計算する関数（簡略版）
 function calNutation( JD ){
-	var T = (JD - 2451545.0) / 36525.0;
+	const T = (JD - 2451545.0) / 36525.0;
 
-	var Omg = mod360(125.00452 - T *   1934.136261);
-	var Ls  = mod360(280.4665  + T *  36000.7698);
-	var Lm  = mod360(218.3165  + T * 481267.8813);
+	const Omg = (125.00452 - T *   1934.136261) * deg2rad;
+	const Ls  = (280.4665  + T *  36000.7698) * deg2rad;
+	const Lm  = (218.3165  + T * 481267.8813) * deg2rad;
+	const M   = (357.52772 + T *  35999.0503) * deg2rad;
 
-	var dpsi  = -17.20 * sin4deg(1.0 * Omg);
-	    dpsi +=  -1.32 * sin4deg(2.0 * Ls);
-	    dpsi +=  -0.23 * sin4deg(2.0 * Lm);
-	    dpsi +=   0.21 * sin4deg(2.0 * Omg);
+	const S0 = [-17.206, -1.317, -0.227, +0.207, +0.147];
+	const S1 = [ -0.017, -0.000, -0.000, +0.000, -0.000];
+	const C0 = [ +0.003, -0.001, +0.000, +0.000, +0.001];
+	const th = [ 1.0 * Omg, 2.0 * Ls, 2.0 * Lm, 2.0 * Omg, 1.0 * M ];
+
+	let dpsi = 0.0;
+	for( let i = 0; i < th.length; i++ ){
+		dpsi += (S0[i] + S1[i] * T) * Math.sin(th[i]) + C0[i] * Math.cos(th[i]);
+	}
 
 	return dpsi;
 }
 
-// �ώ������v�Z����֐�
-function calEqT( JD ){
+// 均時差を計算する関数
+function calEqT_old( JD ){
 	var  T = ( JD - 2451545.0 ) / 36525.0;
 
 	var L0  = mod360( 36000.76983 * T );
@@ -286,8 +358,39 @@ function calEqT( JD ){
 	return ( E * 4.0 );
 }
 
+// cf. https://aa.usno.navy.mil/faq/sun_approx
+// 軌道要素： https://ssd.jpl.nasa.gov/planets/approx_pos.html
+function calEqT( JD ) {
+	const T = (JD - 2451545.0) / 36525.0;
+
+	const l  = mod360( 100.46457166 + 35999.37244981 * T );
+	const p  = 102.93768193 + 0.32327364 * T;
+	const rM = (l - p) * deg2rad;
+	const e  = 0.01671123 - 0.00004392 * T;
+	const rC = 2 * e * Math.sin( rM ) + ( 5.0 / 4.0 * e * e ) * Math.sin( 2.0 * rM );
+	const L  = mod360( l + 180.0 + rC / deg2rad );
+
+	const obl = calOblique( JD );
+	const ce  = Math.cos( obl * deg2rad );
+	const rL  = L * deg2rad;
+	const sL  = Math.sin( rL );
+	const cL  = Math.cos( rL );
+	const rRA = Math.atan2( ce * sL, cL );
+	const RA  = mod360(rRA / deg2rad);
+
+	let EqT = (l + 180.0) - RA; // in degree
+	if( EqT > 180.0 ){
+		EqT -= 360.0;
+	} else if ( EqT < -180.0 ){
+		EqT += 360.0;
+	}
+	return 4.0 * EqT; // in minutes
+}
+
+
 ////////////////////////////////
 
+// カレンダー関係。
 function calDayOfWeek(year, month, day){
 	var JD = calJDz(year, month, day);
 	var you = (JD + 1) % 7;
@@ -314,45 +417,30 @@ function maxday(year, month){
 	return md;
 }
 
+// ΔＴを管理する関数
+// formula A : Notes Scientifiques et Techniques du Bureau des Longitudes, nr. S055
+// from ftp://cyrano-se.obspm.fr/pub/6_documents/4_lunar_tables/newexp.pdf
+// formula D : Addendum 2020 to ‘Measurement of the Earth’s rotation: 720 BC to AD 2015
+// from https://royalsocietypublishing.org/doi/suppl/10.1098/rspa.2020.0776
 function correctTDT(JD){
 	var year = ( JD - 2451545.0 ) / 365.2425 + 2000.0;
 	var t, dt;
 
-	if( year < 948 ){ // formula A.26
-		t = ( JD - 2451545.0 ) / 36525.0;
-		dt = 2177.0 + t * ( 497.0 + t * 44.1 );
-	} else if( year < 1600 ){ // formula A.25
-		t = ( JD - 2451545.0 ) / 36525.0;
-		dt =  102.0 + t * ( 102.0 + t * 25.3 );
-	} else if( year < 1620 ){ // formula B
-		t = year - 1600;
-		dt = 120 + t * ( -0.9808 + t * ( -0.01532 + t / 7129 ) );
-	} else if( year < 2014 ){ // formula C
-		// last elements are sentinels.
-		var tep = [     1620,     1673,     1730,      1798,      1844,     1878,      1905,      1946,      1990,  2014 ];
-		var tk  = [    3.670,    3.120,    2.495,     1.925,     1.525,    1.220,     0.880,     0.455,     0.115, 0.000 ];
-		var ta0 = [   76.541,   10.872,   13.480,    12.584,     6.364,   -5.058,    13.392,    30.782,    55.281, 0.000 ];
-		var ta1 = [ -253.532,  -40.744,   13.075,     1.929,    11.004,   -1.701,   128.592,    34.348,    91.248, 0.000 ];
-		var ta2 = [  695.901,  236.890,    8.635,    60.896,   407.776,  -46.403,  -279.165,    46.452,    87.202, 0.000 ];
-		var ta3 = [-1256.982, -351.537,   -3.307, -1432.216, -4168.394, -866.171, -1282.050,  1295.550, -3092.565, 0.000 ];
-		var ta4 = [  627.152,   36.612, -128.294,  3129.071,  7561.686, 5917.585,  4039.490, -3210.913,  8255.422, 0.000 ];
+	if( year < 2019.0 ){ // formula D
+		const from = [-720, -100, 400, 1000, 1150, 1300, 1500, 1600, 1650, 1720, 1800, 1810, 1820, 1830, 1840, 1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1905, 1910, 1915, 1920, 1925, 1930, 1935, 1940, 1945, 1950, 1953, 1956, 1959, 1962, 1965, 1968, 1971, 1974, 1977, 1980, 1983, 1986, 1989, 1992, 1995, 1998, 2001, 2004, 2007, 2010, 2013, 2016];
+		const to   = [-100, 400, 1000, 1150, 1300, 1500, 1600, 1650, 1720, 1800, 1810, 1820, 1830, 1840, 1850, 1855, 1860, 1865, 1870, 1875, 1880, 1885, 1890, 1895, 1900, 1905, 1910, 1915, 1920, 1925, 1930, 1935, 1940, 1945, 1950, 1953, 1956, 1959, 1962, 1965, 1968, 1971, 1974, 1977, 1980, 1983, 1986, 1989, 1992, 1995, 1998, 2001, 2004, 2007, 2010, 2013, 2016, 2019];
+		const a0   = [20371.848, 11557.668, 6535.116, 1650.393, 1056.647, 681.149, 292.343, 109.127, 43.952, 12.068, 18.367, 15.678, 16.516, 10.804, 7.634, 9.338, 10.357, 9.04, 8.255, 2.371, -1.126, -3.21, -4.388, -3.884, -5.017, -1.977, 4.923, 11.142, 17.479, 21.617, 23.789, 24.418, 24.164, 24.426, 27.05, 28.932, 30.002, 30.76, 32.652, 33.621, 35.093, 37.956, 40.951, 44.244, 47.291, 50.361, 52.936, 54.984, 56.373, 58.453, 60.678, 62.898, 64.083, 64.553, 65.197, 66.061, 66.92, 68.109];
+		const a1   = [-9999.586, -5822.27, -5671.519, -753.21, -459.628, -421.345, -192.841, -78.697, -68.089, 2.507, -3.481, 0.021, -2.157, -6.018, -0.416, 1.642, -0.486, -0.591, -3.456, -5.593, -2.314, -1.893, 0.101, -0.531, 0.134, 5.715, 6.828, 6.33, 5.518, 3.02, 1.333, 0.052, -0.419, 1.645, 2.499, 1.127, 0.737, 1.409, 1.577, 0.868, 2.275, 3.035, 3.157, 3.199, 3.069, 2.878, 2.354, 1.577, 1.648, 2.235, 2.324, 1.804, 0.674, 0.466, 0.804, 0.839, 1.007, 1.277];
+		const a2   = [776.247, 1303.151, -298.291, 184.811, 108.771, 61.953, -6.572, 10.505, 38.333, 41.731, -1.126, 4.629, -6.806, 2.944, 2.658, 0.261, -2.389, 2.284, -5.148, 3.011, 0.269, 0.152, 1.842, -2.474, 3.138, 2.443, -1.329, 0.831, -1.643, -0.856, -0.831, -0.449, -0.022, 2.086, -1.232, 0.22, -0.61, 1.282, -1.115, 0.406, 1.002, -0.242, 0.364, -0.323, 0.193, -0.384, -0.14, -0.637, 0.708, -0.121, 0.21, -0.729, -0.402, 0.194, 0.144, -0.109, 0.277, -0.007];
+		const a3   = [409.16, -503.433, 1085.087, -25.346, -24.641, -29.414, 16.197, 3.018, -2.127, -37.939, 1.918, -3.812, 3.25, -0.096, -0.539, -0.883, 1.558, -2.477, 2.72, -0.914, -0.039, 0.563, -1.438, 1.871, -0.232, -1.257, 0.72, -0.825, 0.262, 0.008, 0.127, 0.142, 0.702, -1.106, 0.614, -0.277, 0.631, -0.799, 0.507, 0.199, -0.414, 0.202, -0.229, 0.172, -0.192, 0.081, -0.165, 0.448, -0.276, 0.11, -0.313, 0.109, 0.199, -0.017, -0.084, 0.128, -0.095, -0.139];
 
-		var i = 0;
-		for( var j = 0; j < tep.length; j++ ){
-			if( tep[ j ] <= year && year < tep[ j + 1 ] ){
-				i = j;
+		for( let i = 0; i < a0.length; i++ ){
+			if (from[i] <= year && year < to[i]) {
+				t = ( year - from[i] ) / ( to[i] - from[i] );
+				dt = a0[i] + t * ( a1[i] + t * ( a2[i] + t * a3[i] ) );
 				break;
 			}
 		}
-		var k  = tk[ i ];
-		var a0 = ta0[ i ];
-		var a1 = ta1[ i ];
-		var a2 = ta2[ i ];
-		var a3 = ta3[ i ];
-		var a4 = ta4[ i ];
-
-		var u = k + ( year - 2000 ) / 100;
-		dt = a0 + u * ( a1 + u * ( a2 + u * ( a3 + u * a4 ) ) );
 	} else { // formula A.25
 		t = ( JD - 2451545.0 ) / 36525.0;
 		dt =  102.0 + t * ( 102.0 + t * 25.3 );
@@ -366,7 +454,7 @@ function correctTDT(JD){
 }
 
 function advanceDate( date, step ){
-	return encodeDate(cnvCalendar(calJDz(decodeDate(date)) + step));
+	return encodeDate(...cnvCalendar(calJDz(...decodeDate(date)) + step));
 }
 
 function calDist(sy, sm, sd, ey, em, ed){
@@ -729,7 +817,7 @@ function nvPrefName(pid) {
 var jplMode = 1;
 
 
-function calPlanetPosition( ye, mo, da, ho, mi, pid ){
+export function calPlanetPosition( ye, mo, da, ho, mi, pid ){
 	var coor = new Array( 2 );
 	coor = findPlaceCoor( pid );
 	var lo = coor[ 0 ];
@@ -754,7 +842,7 @@ export const calPlanetPosition2 = function ( ye, mo, da, ho, mi, lon, lat ){
 	var d = coef[ 0 ];
 	var T = coef[ 1 ];
 
-	plapos[ 0 ] = JD;
+	plapos[ 0 ] = JD;  
 
 	for( var i = 1; i <= 10; i++ ){
 		plapos[ i ] = calPlaPos( JD, i );
@@ -771,8 +859,14 @@ export const calPlanetPosition2 = function ( ye, mo, da, ho, mi, lon, lat ){
 	plapos[13] = angle[ 0 ];
 	plapos[14] = angle[ 1 ];
 
+	for( let i = 0; i < 5; i++ ){
+		plapos[15 + i] = calPlaPos(JD, 11 + i);
+	}
+
 	var dpsi = calNutation( JD ) / 3600.0;
-	for( var i = 1; i <= 12; i++){
+	for( var i = 1; i <= 19; i++){
+		if(i == 13 || i == 14) continue;
+		if(Math.abs(plapos[i]) > 360.0) continue;
 		plapos[ i ] -= dpsi;
 		if( plapos[ i ] <    0.0){
 			plapos[ i ] += 360.0;
@@ -794,13 +888,12 @@ function calPlaPos( JD, pid ){
 	var epos = new Array(3);
 	var gpos = new Array(3);
 	var ppos = new Array(3);
-
-	epos = calPositSO( T2 );
-	if( pid == 1 ){ // �v�Z�ڕW�����z�̏ꍇ
+epos = calPositSO( T2 );
+	if( pid == 1 ){ // 計算目標が太陽の場合
 		gpos[ 0 ] = epos[ 0 ] - 0.005693 / epos[ 2 ];
-	} else if( pid == 2 ){ // �v�Z�ڕW�����̏ꍇ
+	} else if( pid == 2 ){ // 計算目標が月の場合
 		gpos = calPositMO(T);
-	} else {
+	} else if ( pid <= 10 ) { // 計算目標が大惑星の場合
 		switch( pid ){
 			case 3:
 				ppos = calPositME( T2 );
@@ -829,13 +922,31 @@ function calPlaPos( JD, pid ){
 				} else { // Pluto_obspm valids thru -3000 - 3000, but intentionally uses to 0 - 4000
 					ppos = calPositPL_obspm( T );
 				}
-				ppos[ 0 ] += 5029.0966 / 3600.0 * T;  // ���^�ߎ��̍΍��␳����
+				ppos[ 0 ] += 5029.0966 / 3600.0 * T;  // 線型近似の歳差補正する
 				break;
 		}
-		gpos = convertGeocentric( epos, ppos );
+	gpos = convertGeocentric( epos, ppos );
+	
 		dl  = -0.005693  * Math.cos( ( gpos[ 0 ] - epos[ 0 ] ) * Math.PI / 180.0 );
 		dl -= C[ pid - 3 ] * Math.cos( ( gpos[ 0 ] - ppos[ 0 ] ) * Math.PI / 180.0 ) / ppos[ 2 ];
 		gpos[ 0 ] += dl;
+	} else { // 計算目標が小惑星かキローンの場合
+		const mid = pid - 11; 
+		
+		ppos = calAsteroidPosition(+JD, +mid);
+		// 'console.log(ppos)'
+		const meanA = [2.766051, 2.770193, 2.670669, 2.361397, 13.698943];
+		const a = meanA[mid];
+		const Cp = 0.00558236 * Math.sqrt(a) + 0.00016798;
+		if (ppos) {
+			ppos[0] += 5029.0966 / 3600.0 * T;  // 線型近似の歳差補正する
+			gpos = convertGeocentric( epos, ppos );
+			dl  = -0.005693  * Math.cos( ( gpos[ 0 ] - epos[ 0 ] ) * Math.PI / 180.0 );
+			dl -= Cp * Math.cos( ( gpos[ 0 ] - ppos[ 0 ] ) * Math.PI / 180.0 ) / ppos[ 2 ];
+			gpos[ 0 ] += dl;
+		} else {
+			gpos[0] = -361.0; // 計算期間外
+		}
 	}
 
 	return gpos[ 0 ];
@@ -1555,6 +1666,7 @@ function calPositPL_obspm( T ) {
 	return orbitWork( ...orbitalElements );
 }
 
+// 太陽と月の速度
 function calSolarVelocity( JD ){
 	var T = ( JD - 2451545.0 ) / 365250.0;
 	var vel  = 3548.330;
@@ -1618,7 +1730,10 @@ function calLunarVelocity( JD ){
 	return vel;
 }
 
-
+// ノード、リリス
+// This function from "Numerical expressions for precession formulae
+// and mean elements for the Moon and the planets" J. L. Simon, et al.,
+// Astron. Astrophys., 282, 663-683(1994).
 function calPositLuna( JD ){
 	var d = JD - 2451545.0;
 	var T =  d / 36525.0;
@@ -1632,7 +1747,7 @@ function calPositLuna( JD ){
 	l   = mod360(134.9634114 + 13.06499295 * d + 0.0089970278 * T * T);
 	l1  = mod360(357.5291092 +  0.98560028 * d - 0.0001536667 * T * T);
 
-
+// ノード補正
 	DH  = omg;
 	DH -= 1.4978 * sin4deg(2.0 * (D - F));
 	DH -= 0.1500 * sin4deg(l1);
@@ -1641,7 +1756,7 @@ function calPositLuna( JD ){
 	DH -= 0.0800 * sin4deg(2.0 * (l - F));
 	DH  = mod360(DH);
 
-
+// リリス補正
 	LT  = opi + 180.0;
 	LT -= 15.4469 * sin4deg(2.0 * D - l);
 	LT -=  9.6419 * sin4deg(2.0 * (D - l));
@@ -1658,14 +1773,15 @@ function calPositLuna( JD ){
 	LT -=  0.4822 * sin4deg(6.0 * D - 5.0 * l);
 	LT +=  0.4517 * sin4deg(l1);
 	LT -=  0.3806 * sin4deg(6.0 * D - 3.0 * l);
+	LT  = mod360(LT);
 
 	var luna = new Array( DH, LT );
 	return luna;
 }
 
-// ASC�EMC�v�Z
+// ASC・MC計算
 function calGeoPoint( lst, la, obl ){
-	// MC�v�Z
+	// MC計算
 	var MCx = sin4deg(lst);
 	var MCy = cos4deg(lst) * cos4deg(obl);
 	var MC  = mod360( Math.atan2( MCx, MCy ) / deg2rad );
@@ -1673,6 +1789,7 @@ function calGeoPoint( lst, la, obl ){
 		MC += 360.0;
 	}
 
+	// ASC計算
 	var ASCx  = cos4deg(lst);
 	var ASCy  = -(sin4deg(obl) * tan4deg(la));
 	    ASCy -= cos4deg(obl) * sin4deg(lst);
@@ -1685,6 +1802,82 @@ function calGeoPoint( lst, la, obl ){
 	return res;
 }
 
+/* ========== */
+
+// 小惑星位置計算（ mid: 0 - 4 ）
+export function calAsteroidPosition( JD, mid ){
+	// 接触軌道要素 Chebyshev 近似多項式
+	// セレス・パラス・ジュノー・ベスタ・キローンの順
+	const table_a = [
+		[ 2.76711779e+00,  2.15588896e-04,  4.18512586e-05,  2.26138300e-04,  3.86165691e-05,  1.91170823e-04, -8.39240862e-06,  3.35452977e-05, -1.10608695e-04,  1.78833020e-04, -1.11806922e-04],
+		[ 2.77119808e+00, -1.71285605e-04,  2.00062860e-04, -4.63357591e-04,  3.14209339e-04, -4.67291723e-04,  5.23136581e-04,  1.22366585e-03,  1.14800009e-04,  1.00782980e-05,  9.21893412e-05],
+		[ 2.66938983e+00, -5.58767630e-04,  9.71892794e-05, -5.25892029e-04,  4.80754712e-05, -4.12944301e-04, -4.21683699e-05, -1.55317615e-04, -7.74511898e-05,  1.33065727e-04,  8.85253545e-05],
+		[ 2.36152015e+00, -1.04764702e-04,  1.51345367e-05, -1.24604711e-04,  1.75466175e-05, -1.27884260e-04, -2.82042495e-08, -7.86785081e-05, -9.47050606e-06,  4.50426634e-05, -2.07991972e-06],
+		[ 1.36332843e+01, -6.70856570e-02, -5.83311367e-02, -2.55566089e-02, -1.39190695e-02,  7.60072532e-03,  6.18181056e-03,  6.84496732e-03,  1.11875722e-02, -8.61162420e-04, -6.71308839e-04]
+	];
+	const table_l = [
+		[ 1.37451305e+02,  1.36474253e+02,  2.86739521e-04, -3.38100115e-04, -2.83810396e-04, -6.52393123e-04, -9.70412475e-04, -8.52015032e-04,  7.85090698e-04, -2.69285873e-04, -4.53944560e-04],
+		[ 1.36602244e+02,  1.36195471e+02, -5.61095275e-03,  1.75277234e-03,  1.99849869e-04,  1.96613577e-03,  1.14023797e-02, -1.96926622e-03, -5.77789611e-03,  3.29420972e-04,  7.04968934e-04],
+		[ 1.48034350e+02,  1.44043472e+02,  1.42453884e-03, -2.52520760e-04,  1.82515207e-03, -3.65225255e-04,  2.33525950e-03,  3.08490809e-05,  2.12579241e-03,  8.53758306e-04,  9.27513152e-04],
+		[ 1.79311426e+02,  1.73116916e+02, -2.12528722e-04, -6.22949127e-06,  3.61381204e-04, -2.49440160e-04,  9.79735546e-04, -1.20857263e-04,  1.54380738e-03,  1.56449678e-05,  8.19069438e-04],
+		[ 1.31825341e+01,  1.24784109e+01,  1.25828123e-02,  1.48639107e-02,  5.45958071e-03,  2.76968634e-03,  2.78518711e-04, -1.57461439e-03, -1.37777312e-03, -9.30931762e-04, -6.13863244e-04]
+	];
+	const table_h = [
+		[ 3.44841967e-02, -2.80369598e-03, -2.77700177e-04, -5.50244058e-04, -4.90367580e-04, -5.54870187e-04, -6.49050387e-04, -5.58184267e-04, -8.28288956e-05, -2.81387461e-04, -1.78969059e-04],
+		[ 1.92788854e-01, -4.17600516e-03, -3.53852452e-04,  8.94642819e-05, -2.95771068e-05,  1.50904643e-04,  4.87835447e-04, -2.57755985e-04, -5.06040669e-04,  1.37114802e-04, -9.00980971e-05],
+		[ 2.18075322e-01,  3.03175763e-03, -2.04237900e-04,  3.67825969e-04, -4.52055200e-06,  2.59933948e-04,  2.28934806e-04,  1.30738664e-05,  3.12635297e-04, -3.07187433e-04, -9.22044695e-05],
+		[-8.61833802e-02, -1.13536520e-03,  6.24925321e-05, -3.84265911e-04,  1.23049486e-04, -4.08800447e-04,  1.84805184e-04, -2.60876512e-04,  2.39209089e-04,  1.06542651e-04,  1.39881925e-04],
+		[-0.05742006,     -0.00146158,      0.00160014,     -0.00056073,      0.00106266,      0.00051392,     -0.00065326,      0.00085371,     -0.0011434,       0.00018113,     -0.00093444]
+	];
+	const table_k = [
+		[-6.94987523e-02, -3.56976031e-04,  4.99461528e-05,  3.47613842e-04,  5.71046667e-06,  3.00842486e-04, -9.30292633e-05, -3.81063392e-05, -3.37083364e-04,  3.98651768e-04, -3.12100259e-04],
+		[-1.26885608e-01,  3.44407444e-03,  1.87675931e-04, -2.08395160e-04,  2.87142598e-04, -1.94074092e-04,  3.63882223e-04,  7.09527286e-04,  1.31201039e-05,  4.87736223e-05, -4.91413553e-05],
+		[ 1.36201199e-01, -2.48177096e-03,  1.92884427e-04,  6.77846984e-04,  7.80635133e-05,  5.25831425e-04, -7.04536645e-05,  1.29070085e-04, -1.23828293e-04, -3.11641283e-04,  4.75774636e-05],
+		[-2.37212685e-02,  1.66347359e-03, -4.08010582e-06, -1.06093987e-04, -1.40528262e-04, -8.91935216e-05, -3.68766676e-04, -4.10595162e-05, -5.43769082e-04,  7.30782843e-05, -2.85835916e-04],
+		[-3.74756741e-01,  2.07101135e-03,  1.47689886e-03,  2.10497175e-04,  3.83197122e-05, -9.88419764e-04, -5.71096764e-04, -1.48078047e-03, -6.23303012e-04, -3.30756440e-04, -9.48782339e-04]
+	];
+	const table_p = [
+		[ 9.09220870e-02, -5.37497147e-04, -2.04307806e-05,  2.17239615e-05,  3.37683256e-06,  1.50307720e-05,  1.04571373e-05, -2.79958623e-05, -7.37494065e-06,  2.86355438e-05,  1.93835974e-06],
+		[ 3.67147349e-02,  5.43921781e-03, -7.14465444e-05,  2.76441434e-05, -6.59724572e-05,  2.76643946e-05, -7.32536480e-05, -9.19004748e-05, -2.51473853e-06, -9.00612465e-06,  1.65482262e-05],
+		[ 2.00644037e-02,  3.50101359e-03, -2.68715277e-05, -1.03247623e-04, -1.19970108e-05, -8.09699210e-05,  1.20535685e-05, -2.19946555e-05,  1.70194363e-05,  4.24006842e-05, -7.89530908e-06],
+		[ 6.04750810e-02,  2.83747880e-04, -3.49557711e-06,  6.39204512e-06, -5.30809659e-06,  7.30451674e-06, -1.70745057e-05,  5.21230752e-06, -2.65701744e-05, -7.27216097e-07, -1.44525009e-05],
+		[-2.95413282e-02,  2.82455135e-04,  6.64898456e-05,  2.94015020e-05, -4.56415088e-07, -3.20204607e-05, -3.10206039e-05, -3.10706092e-05,  1.29270458e-05, -1.15253338e-05,  1.01777489e-05]
+	];
+	const table_q = [
+		[ 1.57391682e-02,  2.35500022e-03,  1.68532656e-05,  5.81613238e-06,  4.89171400e-05,  9.57097837e-06,  7.26537831e-05,  2.66626834e-05, -6.29940204e-06, -9.09627788e-07,  1.44009044e-05],
+		[-2.97426707e-01, -5.18639429e-04,  3.61692505e-05, -8.21785552e-05,  5.11353270e-05, -7.68331553e-05,  1.33616115e-04,  1.51115415e-04, -2.65942075e-05,  1.09696084e-05,  4.78558858e-06],
+		[-1.11191863e-01,  8.16434116e-04,  1.76558356e-05, -2.28093253e-05,  1.88458405e-05, -2.08074251e-05,  4.55881375e-05, -1.59194286e-05,  5.36771112e-05, -1.83828895e-05,  3.43121527e-06],
+		[-1.47823248e-02,  9.50927526e-04,  5.39974031e-07,  1.90785840e-05, -8.00951960e-07,  2.10372511e-05, -3.92981897e-07,  1.44182656e-05, -3.20311655e-07, -3.20630756e-06, -4.34637604e-07],
+		[-5.27699356e-02, -3.71957289e-04, -4.77751902e-05, -8.98537573e-05, -1.68400061e-05,  2.27906342e-05,  5.55114272e-06,  2.57456091e-05, -3.02298236e-05,  7.84796059e-06, -3.18100566e-05]
+	];
+
+	// 軌道要素から日心位置を算出
+	const x = ( JD - 2460675.0 ) / 36525.0 ;
+	if ( Math.abs(x) > 1.0 ) {
+		return null; // 計算対象範囲外
+	}
+
+const r_a = table_a[mid];
+const r_l = table_l[mid];
+const r_h = table_h[mid];
+const r_k = table_k[mid];
+const r_p = table_p[mid];
+const r_q = table_q[mid];
+
+
+	const a = calChebyshevPolynomial( x, r_a );
+	const l = calChebyshevPolynomial( x, r_l ) / deg2rad;
+	const h = calChebyshevPolynomial( x, r_h );
+	const k = calChebyshevPolynomial( x, r_k );
+	const p = calChebyshevPolynomial( x, r_p );
+	const q = calChebyshevPolynomial( x, r_q );
+
+	var orbitalElements = convertOrbitalElement( a, l, h, k, p, q );
+	const o = orbitWork( ...orbitalElements );
+	// console.log(o)
+	return o;
+}
+//math.js
 var planame = ["",
     "Sun", "Moon", "Mercury", "Venus", "Mars",
     "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
@@ -1706,7 +1899,14 @@ var sgnname = [
     "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
 
 var sgnS = ["Ar", "Ta", "Ge", "Ca", "Le", "Vi", "Li", "Sc", "Sg", "Cp", "Aq", "Pi"];
+function convertPlanetHouse( pla, csp ){
+	var hse = new Array();
+	for(var i = 1; i < 14; i++ ){
+		hse[i] = convertPlanetHouse0( pla[i], csp );
+	}
 
+	return hse;
+}
 
 function CnvPlanetHouse0( pos, csp){
 	var cusp0 = 0.0;
@@ -1726,7 +1926,9 @@ function CnvPlanetHouse0( pos, csp){
 	return hse;
 }
 
+// ----------------------------------
 
+//離角計算（アスペクトタイプ）
 function angle(obj1, obj2){
     var dist = obj2 - obj1;
     var ang  = acos4deg(cos4deg(dist));
@@ -1746,6 +1948,7 @@ function angle1(obj, csp){
 	return ang;
 }
 
+// 角度差→アスペクト変換
 function checkAspect(ang, deforb){
 	var asp = checkAspectStrictly(ang, deforb, 0.0);
 	var asptype = asp[ 0 ];
@@ -1782,7 +1985,7 @@ function checkAspectStrictly(asp, orb1, orb2){
 	return result;
 }
 
-
+// 前？　後ろ？
 function ChkPos(to, from){
 	var diff = to - from;
 	if(diff >= +180.0) diff -= 360.0;
@@ -1792,19 +1995,19 @@ function ChkPos(to, from){
 }
 
 
-export const checkRetrograde = function (ye, mo, da, ho, mi){
-	var pos0 = calPlanetPosition(ye, mo, da, ho, mi - 1, 48);
-	var pos1 = calPlanetPosition(ye, mo, da, ho, mi + 1, 48);
-	var ret  = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-	var vel  = 0.0;
-	for( var i = 1; i <= 10; i++ ){
-		vel = (pos1[i] - pos0[i]) * 720.0;
-		if(vel < 0.0) ret[i] = -1;
-	}
-	return ret;
-}
+ export const checkRetrograde = function (ye, mo, da, ho, mi){
+ 	var pos0 = calPlanetPosition(ye, mo, da, ho, mi - 1, 48);
+ 	var pos1 = calPlanetPosition(ye, mo, da, ho, mi + 1, 48);
+ 	var ret  = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+ 	var vel  = 0.0;
+ 	for( var i = 1; i <= 10; i++ ){
+ 		vel = (pos1[i] - pos0[i]) * 720.0;
+ 		if(vel < 0.0) ret[i] = -1;
+ 	}
+ 	return ret;
+ }
 
-
+//絶対度数→サイン変換
 function cnvSign( adeg ){
 	adeg = mod360(adeg);
 	var sgn = Math.floor(adeg / 30.0);
@@ -1812,16 +2015,16 @@ function cnvSign( adeg ){
 	return sgn;
 }
 
-
+// 絶対度数→サイン文字列変換
 function cnv2kanji( adeg ){
 	adeg = mod360(adeg);
 	var sgn = Math.floor(adeg / 30.0);
 	var deg = sprintf("%2d", Math.floor(adeg - sgn * 30.0));
 	var min = sprintf("%02d", Math.floor((adeg - (sgn * 30 + deg)) * 60.0));
-	return sprintf( "%s%2d�x%02d��", sgnname[ sgn ], deg, min );
+	return sprintf( "%s%2d度%02d分", sgnname[ sgn ], deg, min );
 }
 
-
+// 絶対度数→サイン文字列変換
 function cnv2knj( adeg ){
 		adeg = mod360(adeg);
 		var sgn = Math.floor(adeg / 30.0);
@@ -1830,7 +2033,7 @@ function cnv2knj( adeg ){
 		return sprintf( "%2d%s%02d", deg, sgnS[sgn], min );
 }
 
-
+// 天体ＩＤ→記号
 function cnv2glyphP( pid ){
 	var str;
 	var strPlanet = new Array("As", "Mc");
@@ -1850,7 +2053,7 @@ function cnv2glyphP( pid ){
 	return str;
 }
 
-
+// 絶対度数→サイン記号列変換
 function cnv2glyph( adeg ){
 	var gadr0 = "<img src=\"";
 	var gadr1 = "../image/astropict/sign/s";
@@ -1868,7 +2071,7 @@ function cnv2glyph( adeg ){
 	return str;
 }
 
-
+// 絶対度数→アスペクト記号列変換
 function asp2glyph( asp, orb1, orb2 ){
 	var str;
 	var gadr0 = "<img src=\"../image/astropict/aspect/a";
@@ -2178,6 +2381,13 @@ function calPositPL_bdl( JD ){
 	return res;
 }
 
+/*
+ * 定数定義／数学関数スクリプト version 0.001j at 2017/04/27
+ * Copyright (c) 1999-2001, 2017 Yoshihiro Sakai & Sakai Institute of Astrology
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+
 // $PI = 3.141592653589793;
 let deg2rad = Math.PI / 180.0;
 
@@ -2235,3 +2445,15 @@ function ceil( X ){
 }
 
 1;
+
+// x in [-1, +1]
+function calChebyshevPolynomial(x, coefs) {
+	const t = Math.acos(x);
+
+	let y = 0;
+	for(let i = 0; i < coefs.length; i++) {
+		y += coefs[ i ] * Math.cos(i * t);
+	}
+
+	return y;
+}

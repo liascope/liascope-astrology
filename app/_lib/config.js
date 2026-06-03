@@ -1,6 +1,8 @@
 export const TIMEZONE_API_BASE_URL= "https://api.timezonedb.com/v2.1/get-time-zone?";
 export const NOMINATIM_URL= "https://nominatim.openstreetmap.org/search?q="
 
+export const actualYear = new Date().getFullYear();
+
 // export const DEFAULT_HOUSE_SYSTEM= "1"; 
 export const DEFAULT_TIME = "00:00";
 export const DEBOUNCE = 1100;
@@ -49,7 +51,7 @@ export const houseSystem = {
   "7": "Morinus",
 };
 
-export  const symbols = [["☉", "Sun"],["☽", "Moon"],["☿", "Mercury"], ["♀", "Venus"],["♂", "Mars"], ["♃", "Jupiter"], ["♄", "Saturn"], ["♅", "Uranus"],["♆", "Neptune"],["♇", "Pluto"],["☊", "NNode"],["☋", "SNode"],["⚸", "Lilith"],["As", "As"], ["MC", "Mc"],];
+export  const symbols = [["☉", "Sun"],["☽", "Moon"],["☿", "Mercury"], ["♀", "Venus"],["♂", "Mars"], ["♃", "Jupiter"], ["♄", "Saturn"], ["♅", "Uranus"],["♆", "Neptune"],["♇", "Pluto"],["☊", "NNode"],["☋", "SNode"],["⚸", "Lilith"],["⚷", "Chiron"],["As", "As"], ["MC", "Mc"],];
 
 export const zodiac = { Aries: "♈",Taurus: "♉",Gemini: "♊",Cancer: "♋",Leo: "♌",Virgo: "♍",Libra: "♎",Scorpio: "♏",Sagittarius: "♐",Capricorn: "♑",Aquarius: "♒",Pisces: "♓",
 };

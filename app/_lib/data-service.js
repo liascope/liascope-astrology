@@ -1,5 +1,5 @@
 import moment from "moment-timezone";
-import { calPlanetPosition2 } from "./calcDegrees";
+import { calPlanetPosition2} from "./calcDegrees";
 import { calHouseCusp2 } from "./calcDegrees";
 import { checkRetrograde } from "./calcDegrees";
 import { TIMEZONE_API_BASE_URL, ASPECTS, zodiac} from "./config";
@@ -80,25 +80,30 @@ const retroData = [
   'Saturn', 'Uranus', 'Neptune', 'Pluto'
 ].filter((_, i) => retroPlanets[i + 3] === -1);
 
+// calc SNode from Nnode
+const normalize360 = (deg) => (deg % 360 + 360) % 360;
+
 // console.log(retroData)
  const planets = {
-  Sun: [Math.round(planetPosition[1])],
-  Moon: [Math.round(planetPosition[2])],
-  Mercury: [Math.round(planetPosition[3])],
-  Venus: [Math.round(planetPosition[4])],
-  Mars: [Math.round(planetPosition[5])],
-  Jupiter: [Math.round(planetPosition[6])],
-  Saturn: [Math.round(planetPosition[7])],
-  Uranus: [Math.round(planetPosition[8])],
-  Neptune: [Math.round(planetPosition[9])],
-  Pluto: [Math.round(planetPosition[10])],
-  NNode: [Math.round(planetPosition[11])],
-  SNode: [Math.round(planetPosition[11] - 180)],
-  Lilith: [Math.round(planetPosition[12])],
+  Sun: [Math.trunc(planetPosition[1])],
+  Moon: [Math.trunc(planetPosition[2])],
+  Mercury: [Math.trunc(planetPosition[3])],
+  Venus: [Math.trunc(planetPosition[4])],
+  Mars: [Math.trunc(planetPosition[5])],
+  Jupiter: [Math.trunc(planetPosition[6])],
+  Saturn: [Math.trunc(planetPosition[7])],
+  Uranus: [Math.trunc(planetPosition[8])],
+  Neptune: [Math.trunc(planetPosition[9])],
+  Pluto: [Math.trunc(planetPosition[10])],
+  NNode: [Math.trunc(planetPosition[11])],
+  SNode: [Math.trunc(normalize360(planetPosition[11])+180)],
+  Lilith: [Math.trunc(planetPosition[12])],
+  Chiron: [Math.trunc(planetPosition[19])],
 };
+
 if (!uT) {
-  planets.As = [Math.round(planetPosition[13])];
-  planets.Mc = [Math.round(planetPosition[14])];
+  planets.As = [Math.trunc(planetPosition[13])];
+  planets.Mc = [Math.trunc(planetPosition[14])];
 }
 const positionData = {
   planets,
@@ -106,6 +111,7 @@ const positionData = {
 };
     return { positionData, localTime, utcTime, retroData };
   } catch (error) {
+    console.log(error)
     console.error(error.message);
     throw error;
   }
