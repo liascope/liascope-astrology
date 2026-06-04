@@ -80,7 +80,7 @@ const retroData = [
   'Saturn', 'Uranus', 'Neptune', 'Pluto'
 ].filter((_, i) => retroPlanets[i + 3] === -1);
 
-// calc SNode from Nnode
+// calc SNode from Nnode 
 const normalize360 = (deg) => (deg % 360 + 360) % 360;
 
 // console.log(retroData)
@@ -96,7 +96,7 @@ const normalize360 = (deg) => (deg % 360 + 360) % 360;
   Neptune: [Math.trunc(planetPosition[9])],
   Pluto: [Math.trunc(planetPosition[10])],
   NNode: [Math.trunc(planetPosition[11])],
-  SNode: [Math.trunc(normalize360(planetPosition[11])+180)],
+  SNode: [normalize360(Math.trunc(planetPosition[11]+180))],
   Lilith: [Math.trunc(planetPosition[12])],
   Chiron: [Math.trunc(planetPosition[19])],
 };
