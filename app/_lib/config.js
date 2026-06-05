@@ -51,7 +51,7 @@ export const houseSystem = {
   "7": "Morinus",
 };
 
-export  const symbols = [["☉", "Sun"],["☽", "Moon"],["☿", "Mercury"], ["♀", "Venus"],["♂", "Mars"], ["♃", "Jupiter"], ["♄", "Saturn"], ["♅", "Uranus"],["♆", "Neptune"],["♇", "Pluto"],["☊", "NNode"],["☋", "SNode"],["⚸", "Lilith"],["⚷", "Chiron"],["As", "As"], ["MC", "Mc"],];
+export  const symbols = [["☉", "Sun"],["☽", "Moon"],["☿", "Mercury"], ["♀", "Venus"],["♂", "Mars"], ["♃", "Jupiter"], ["♄", "Saturn"], ["♅", "Uranus"],["♆", "Neptune"],["♇", "Pluto"],["☊", "NNode"],["☋", "SNode"],["⚸", "Lilith"],["⚷", "Chiron"],["⊗", "Fortune"],["As", "As"], ["MC", "Mc"],];
 
 export const zodiac = { Aries: "♈",Taurus: "♉",Gemini: "♊",Cancer: "♋",Leo: "♌",Virgo: "♍",Libra: "♎",Scorpio: "♏",Sagittarius: "♐",Capricorn: "♑",Aquarius: "♒",Pisces: "♓",
 };
