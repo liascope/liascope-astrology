@@ -83,6 +83,9 @@ const retroData = [
 // calc SNode from Nnode 
 const normalize360 = (deg) => (deg % 360 + 360) % 360;
 
+// ASC-based Part of Fortune calculation; switches between day/night formula using Sun vs ASC+180 (Descendant axis) to determine sect
+const fortune = planetPosition[1] < normalize360(planetPosition[13]+180) ? (planetPosition[13] + planetPosition[1]) - planetPosition[2] : (planetPosition[13] + planetPosition[2]) - planetPosition[1]
+
 // console.log(retroData)
  const planets = {
   Sun: [Math.trunc(planetPosition[1])],
@@ -99,6 +102,7 @@ const normalize360 = (deg) => (deg % 360 + 360) % 360;
   SNode: [normalize360(Math.trunc(planetPosition[11]+180))],
   Lilith: [Math.trunc(planetPosition[12])],
   Chiron: [Math.trunc(planetPosition[19])],
+  Fortune: [normalize360(Math.trunc(fortune))]
 };
 
 if (!uT) {
