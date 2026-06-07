@@ -26,8 +26,8 @@ const [showReminder, setShowReminder] = useState(true);
       className="
         rounded-2xl rounded-bl-sm
         bg-gradient-to-br
-        from-[rgba(230,193,85,0.9)]
-        to-[rgb(232,155,83,0.08)]
+        from-[rgba(230,193,85)]
+        to-[rgb(232,155,83)]
         border border-white/20
         px-3 py-2 pr-7
         text-[11px] text-black/60

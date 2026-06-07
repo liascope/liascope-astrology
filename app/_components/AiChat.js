@@ -62,7 +62,7 @@ export default function AiChat({ chartContext, chart}) {
                    {msg.content}
                   </ReactMarkdown>
                   {msg.role === "assistant" && idx !== 0 && (
-              <CopyContext copy={msg.content} title='Copy Reading' />
+              <CopyContext copy={msg.content} title='Copy Reading' padding='pr-2'/>
                    )}
           </div>
         ))}

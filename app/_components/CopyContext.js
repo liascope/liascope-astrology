@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 
-export default function CopyContext({ copy, title = 'Copy Chart' }) {
+export default function CopyContext({ copy, title = 'Copy Chart', padding='-mb-7 pt-5 pr-10' }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -14,7 +14,7 @@ export default function CopyContext({ copy, title = 'Copy Chart' }) {
   };
 
   return (
-    <div className="relative group flex justify-end -mb-7 pt-5 pr-10 w-full">
+    <div className={`relative group flex justify-end ${padding} w-full`}>
 
       {/* Tooltip */}
       <div
