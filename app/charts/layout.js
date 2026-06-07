@@ -9,7 +9,6 @@ export default function ChartsLayout({ children }) {
   return (
   <div className="overflow-x-hidden flex flex-col-reverse min-[125px]:flex min-[1625px]:flex-row relative w-screen">
       <div className="md:flex-1 transition-all duration-500 ease-in-out relative pb-40">
-  
         <ToggleAspectListBtn
             buttonLabel="Info"    
            className='z-20 w-[7rem] absolute top-4 sm:top-2 sm:right-0 right-[-3rem] scale-[80%]' 

@@ -1,4 +1,4 @@
-import { aspectSymbols, zodiac, chartMap } from "./config";
+import { aspectSymbols, zodiac, chartMap, MAX_PER_DAY } from "./config";
 
 export const getChartType = (pathname) => Object.entries(chartMap).find(([type, paths]) => 
   paths.includes(pathname))?.[0] || null;
@@ -91,4 +91,28 @@ export function getInitialTransitData() {
     transitTime,
     transitPlace,
   };
+}
+
+// AiChat question limit functions:
+function getLimitKey(chart) {
+  return `lia_limit_${chart}_${new Date().toISOString().split("T")[0]}`;
+}
+
+export function getCurrentCount(chart) {
+  const key = getLimitKey(chart);
+  const value = localStorage.getItem(key);
+  return value ? Number(value) : 0;
+}
+
+export function incrementCount(chart) {
+  const key = getLimitKey(chart);
+  const current = getCurrentCount(chart);
+
+  localStorage.setItem(key, String(current + 1));
+
+  return current + 1;
+}
+
+export function hasReachedLimit(chart) {
+  return getCurrentCount(chart) >= MAX_PER_DAY;
 }

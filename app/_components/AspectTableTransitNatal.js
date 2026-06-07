@@ -1,7 +1,6 @@
-import { aspectSymbols, symbols } from "@/app/_lib/config";
-import ToggleAspectListBtn from "./ToggleAspectListBtn";
+import { symbols } from "@/app/_lib/config";
 
-export default function AspectTableTransitNatal({aspects, planets, aspectMatrix}) {
+export default function AspectTableTransitNatal({planets, aspectMatrix}) {
 
   return (
     <div className="flex lg:flex-row flex-col md:w-fit w-full relative">
@@ -44,22 +43,4 @@ export default function AspectTableTransitNatal({aspects, planets, aspectMatrix}
     ])}
   </div>
 </div>
-
-<ToggleAspectListBtn
-  buttonLabel="Aspect List"
-  className="min-[1000px]:absolute z-20 top-6 left-10/10 w-2xl"
-  dropdownClassName="relative top-9 h-[20rem] w-fit overflow-x-hidden rounded-md scrollbar-thin scrollbar-thumb-gray-400" reverseIconOrder={true}
->
-  <table className="no-border-table text-center border-separate border-spacing-0">
-    <tbody>
-      {aspects.map((aspect, idx) => (
-        <tr key={idx}>
-          <td className="px-4 py-1 text-[#4fa091]">{aspect.point.name}</td> 
-          <td className="px-4 py-1">{aspectSymbols[aspect.aspect.name]}</td>
-          <td className="px-4 py-1 text-[#3f638d]">{aspect.toPoint.name}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</ToggleAspectListBtn>
     </div>);}

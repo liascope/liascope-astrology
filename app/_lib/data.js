@@ -70,3 +70,82 @@ export const perfectionSignDescriptions = {
   Pisces:
     "nurtures spirituality, creativity, and emotional intuition. You may connect with your dreams, embrace compassion, and explore your spiritual side.",
 };
+
+export const presets = {
+  natal: [
+    "What are my greatest strengths?",
+    "What are my biggest life challenges?",
+    "What is my life purpose?",
+    "What are my career potentials?",
+    "How do I approach relationships?",
+    "What do I need emotionally to feel secure?",
+    "What hidden talents should I develop?",
+    "What patterns are holding me back?"
+  ],
+
+  transit: [
+    "What themes are currently active in my life?",
+    "What opportunities are coming my way?",
+    "What challenges should I prepare for?",
+    "What should I focus on right now?",
+    "Which area of life is changing the most?",
+    "How can I make the best use of these transits?",
+    "What lessons am I currently learning?",
+    "What energy should I avoid right now?"
+  ],
+
+  partner: [
+    "What are this person's greatest strengths?",
+    "What motivates this person the most?",
+    "How does this person approach relationships?",
+    "What emotional needs does this person have?",
+    "What career potentials does this person have?",
+    "What challenges is this person likely to face?",
+    "What makes this person unique?",
+    "How does this person express love and affection?"
+  ],
+
+  draconic: [
+    "What does my soul want to learn in this lifetime?",
+    "What is my deeper spiritual purpose?",
+    "Which gifts did I bring into this life?",
+    "What karmic patterns should I release?",
+    "What qualities should I develop most?",
+    "What does my authentic self look like?",
+    "How does my draconic chart influence my natal chart?",
+    "What is my soul trying to express through me?"
+  ],
+
+  progression: [
+    "What personal growth am I experiencing now?",
+    "Which area of life is currently evolving?",
+    "What chapter of life am I entering?",
+    "What emotional changes are taking place?",
+    "How has my purpose evolved over time?",
+    "What should I focus on during this progression?",
+    "Which old patterns am I outgrowing?",
+    "What opportunities for growth are emerging?"
+  ],
+
+  comparisonTransit: [
+    "How are current transits affecting me?",
+    "Which natal placements are most activated right now?",
+    "What opportunities do these transits bring?",
+    "What challenges do these transits indicate?",
+    "What area of life needs my attention?",
+    "What personal growth is being triggered?",
+    "Which themes are repeating from the past?",
+    "How can I work with these energies consciously?"
+  ],
+
+  comparisonPartner: [
+    "What are the strengths of this relationship?",
+    "What challenges may arise between us?",
+    "How compatible are we emotionally?",
+    "How compatible are we romantically?",
+    "How do we communicate with each other?",
+    "What can we learn from each other?",
+    "What creates attraction between us?",
+    "What is the long-term potential of this connection?"
+  ]
+};

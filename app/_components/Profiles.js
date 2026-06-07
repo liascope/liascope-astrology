@@ -1,44 +1,17 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAstroForm } from '../_lib/context/AstroContext';
 import Button from './Button';
 import Loader from './Loader';
 import Trash from './navicons/Trash';
-
+import useSavedProfiles from '../_lib/hooks/useSavedProfiles';
 export function Profiles() {
-  const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
- 
 
-  const { setFormState } = useAstroForm();
+ const {loading, profiles, error, deleteProfile} = useSavedProfiles();
+ const { setFormState } = useAstroForm();
   const router = useRouter();
-
-  // Load profiles from localStorage
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('liascope-profiles');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setProfiles(parsed);
-      }
-    } catch (err) {
-      console.error('Failed to load profiles', err);
-      setError('Could not load profiles');
-      setProfiles([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Delete profile
-  const deleteProfile = (id) => {
-    const updated = profiles.filter((p) => p.id !== id);
-    setProfiles(updated);
-    localStorage.setItem('liascope-profiles', JSON.stringify(updated));
-  };
 
   // Load profile and navigate
   const loadProfile = useCallback(

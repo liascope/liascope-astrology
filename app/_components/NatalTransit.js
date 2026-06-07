@@ -10,7 +10,8 @@ import useTimeunknown from '@/app/_lib/hooks/useTimeunknown';
 import useRetroPlanets from '@/app/_lib/hooks/useRetroPlanets';
 import { calculateAspectsBetweenCharts, generateComparisonTable } from '@/app/_lib/data-service';
 import AspectFilter from './AspectFilter';
-import CopyChart from './CopyChart';
+import CopyContext from './CopyContext';
+import AiChat from './AiChat';
 
 export default function NatalTransitWrapper({ chartID }) {
 
@@ -28,15 +29,15 @@ export default function NatalTransitWrapper({ chartID }) {
 
   const aspectText = aspectMatrix.flatMap(a => a.aspects.map((symbol, index) => ({ symbol, index })).filter(x => x.symbol).map(x => {
       const name = Object.entries(aspectSymbols).find(([, v]) => v === x.symbol)?.[0] || "";
-      return `Natal ${a.planet} is ${name} to ${type} ${symbols[x.index].at(-1)}`;}));
+      return `Natal ${a.planet} ${name} ${type} ${symbols[x.index].at(-1)}`;}));
 
   // Comparison Planets, Signs and Houses
 const comparison = generateComparisonTable(natalData, transitData, [unknownTime?.birth, unknownTime?.transit]);
 
 const getRetro = (planet, chartType) => retro?.[chartType]?.includes(planet) ? " Retrograde" : "";
 
-const natalInExternal = comparison.map(a =>`Natal ${a.Planet}${getRetro(a.Planet, "natal")} is ${a.Natal} in ${type} ${a.TH}. House`);
-const externalInNatal = comparison.map(a =>`${type} ${a.Planet}${getRetro(a.Planet, type)} is ${a.Transit} in natal ${a.NH2}. House`);
+const natalInExternal = comparison.map(a =>`Natal ${a.Planet}${getRetro(a.Planet, "natal")} ${a.Natal} in ${type} ${a.TH}H`);
+const externalInNatal = comparison.map(a =>`${type} ${a.Planet}${getRetro(a.Planet, type)} ${a.Transit} in Natal ${a.NH2}H`);
 
 const copyChart = ["Comparison-Chart:", "",  ...(unknownTime?.birth && unknownTime?.transit ? [  "Unknown times. Only aspects can be shown.", '', "Comparison Aspects:", ...aspectText]
     : unknownTime?.birth ? [`Unknown Natal time. Only Natal Signs and Planets in ${type}-Chart can be shown.`, '', `Natal Signs and Planets in ${type}-Chart:`, ...natalInExternal, "", "Comparison Aspects:", ...aspectText]
@@ -89,8 +90,9 @@ const copyChart = ["Comparison-Chart:", "",  ...(unknownTime?.birth && unknownTi
     >
       <div className="flex flex-col-reverse min-[1625px]:flex-row justify-around w-screen min-[1625px]:w-full h-fit relative">
         {/* Left panel: tables */}
+      
         <div className="flex flex-col min-[1625px]:items-baseline items-center min-[1625px]:w-[40rem] h-fit gap-5 w-screen p-2">
-           <CopyChart copy={copyChart}/>
+           <CopyContext copy={copyChart}/>
           <NatalTransitHouseSign comparison={comparison} selected={selected} />
           <AspectTableTransitNatal planets={planets} aspects={aspects} aspectMatrix={aspectMatrix} />
         </div>
@@ -100,11 +102,13 @@ const copyChart = ["Comparison-Chart:", "",  ...(unknownTime?.birth && unknownTi
           <div className="absolute top-0 left-2 z-25">
             <AspectFilter chartID={chartID} />
           </div>
+          <div className='flex flex-col'>
           <div className="min-[1625px]:block flex items-center justify-center h-svw min-[1625px]:h-fit" id={chartID} />
+            <AiChat chartContext={copyChart} chart={chartID}></AiChat>
+          </div>
         </div>
-            
       </div>
-    
+     
     </motion.div>
   );
 }
