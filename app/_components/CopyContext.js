@@ -14,7 +14,7 @@ export default function CopyContext({ copy, title = 'Copy Chart' }) {
   };
 
   return (
-    <div className="relative group flex justify-end -mb-7 pt-5 pr-10 ">
+    <div className="relative group flex justify-end -mb-7 pt-5 pr-10 w-full">
 
       {/* Tooltip */}
       <div
