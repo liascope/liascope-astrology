@@ -19,7 +19,7 @@ export default function CopyContext({ copy, title = 'Copy Chart', padding='-mb-7
       {/* Tooltip */}
       <div
         className={`
-          absolute -top-8 right-2 text-xs bg-black/70 text-white px-2 py-1 rounded-md
+          absolute -top-8 right-2 text-xs bg-black/70 text-white px-2 py-1 rounded-md z-5
           transition-all duration-200
           ${copied
             ? "opacity-100 translate-y-0"
