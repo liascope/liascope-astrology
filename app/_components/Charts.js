@@ -40,10 +40,9 @@ const copyChart = [`${capitalize(pathname.split('/').at(-1))}-Chart:`, "",
       transition={{ duration: 0.4 }}
     >
       <div className="min-[1000px]:w-[40%] min-w-0 h-fit flex flex-col">
-
-      <CopyContext copy={copyChart}/>
-
+  
         <div className="w-screen min-[1000px]:w-full flex flex-col gap-5 ">
+          <CopyContext copy={copyChart}/>
         <HouseSignList data={{ planetList, cuspList }} />
         <AspectTable aspect={aspect} />
        </div>  

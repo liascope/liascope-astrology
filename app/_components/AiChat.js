@@ -74,9 +74,9 @@ export default function AiChat({ chartContext, chart}) {
         )}
       </div>
         {isFirstConversation && (
-  <div className="mb-3 flex flex-col items-end">
+  <div className="mb-3 flex flex-col">
     
-    <div className="flex gap-2 overflow-x-auto pb-2 customScrollbar">
+    <div className="flex gap-2 overflow-x-auto pb-2 min-w-0">
       {visiblePresets.map((preset) => (
         <button
           key={preset}
@@ -86,11 +86,12 @@ export default function AiChat({ chartContext, chart}) {
           {preset}
         </button>
       ))}
-    </div><button
+    </div>
+    <button
   onClick={() =>
     setVisiblePresets(getRandomPresets(chart))
   }
-  className="text-[10px] text-black/40 hover:text-black/70 mt-2"
+  className="text-right text-[10px] text-black/40 hover:text-black/70 mt-2"
 >
   refresh suggestions ↻
 </button>
