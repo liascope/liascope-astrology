@@ -36,7 +36,7 @@ ASSISTANT:
 
 
 let retries = 3;
-    let delay = 5000;
+    let delay = 3000;
 
     while (retries > 0) {
       try {

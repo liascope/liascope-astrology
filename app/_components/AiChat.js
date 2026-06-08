@@ -97,22 +97,60 @@ export default function AiChat({ chartContext, chart}) {
 </button>
   </div>
 )}
-  {/* chat input */}
-      <div className="flex items-center justify-end gap-2 mt-3 transition-all duration-500 relative">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 rounded-full border border-white/20 bg-[rgb(96,127,106,0.4)] px-3 py-2 text-sm text-black/90 placeholder-white/95 outline-none backdrop-blur-md"
-          placeholder={'Ask Lia about the '+chart+' chart...'}
-        />
+  {/* chat */}
+   <div
+  className="
+    relative
+    flex items-end
+    rounded-3xl
+    border border-white/20
+    bg-[rgb(96,127,106,0.4)]
+    backdrop-blur-md
+    pr-1 pl-5 py-1
+  "
+>
+  <textarea
+    value={input}
+    onChange={(e) => {
+      setInput(e.target.value);
 
-        <button
-          onClick={sendMessage}
-          className={`${input ? 'opacity-100' : 'opacity-0' } absolute z-2 right-1 bg-[#ebc155cc] text-white border-none rounded-full cursor-pointer transition-colors sm:text-base md:text-lg lg:text-xl duration-300 hover:bg-[#e89b53] sm:w-36 md:w-40 lg:w-fit flex items-center justify-center p-2`}
-        >
-          <ArrowUp/>
-        </button>
-      </div>
+      e.target.style.height = "auto";
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    }}
+    rows={1}
+    placeholder={`Ask Lia about the ${chart} chart...`}
+    className="
+      flex-1
+      resize-none
+      bg-transparent
+      outline-none
+      text-sm
+      text-black/90
+      placeholder-white/95
+      mb-2
+      max-h-40
+      overflow-y-auto
+    "
+  />
+
+  <button
+    onClick={sendMessage}
+    className={`
+      ml-2
+      shrink-0
+      rounded-full
+      text-white/95
+      p-2
+      bg-[#ebc155cc]
+      hover:bg-[#e89b53]
+      transition-all
+      duration-300
+      ${input ? "opacity-100" : "opacity-0 pointer-events-none"}
+    `}
+  >
+    <ArrowUp />
+  </button>
+</div>
     
      <AiLimitTracker chart={chart}/>
     </div>
