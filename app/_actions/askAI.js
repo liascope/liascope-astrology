@@ -17,8 +17,9 @@ export async function askAI(chartContext, question) {
     });
 
     const prompt = `
-You are an astrologer using only the provided chart data.
+You are an astrologer answering only the next question only from the provided chart data.
 
+Use only chart factors strictly relevant to the question.
 If missing data, say so.
 No introductions or self-reference. Start directly.
 Use markdown bullets and headings.

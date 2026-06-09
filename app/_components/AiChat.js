@@ -11,7 +11,7 @@ import ArrowUp from "./navicons/ArrowUp";
 
 export default function AiChat({ chartContext, chart}) {
   const {selected } = useAstroForm();
-  const {input,
+  const {aiIntro, input,
     setInput,
     loading,
     messages,
@@ -38,7 +38,7 @@ export default function AiChat({ chartContext, chart}) {
 >
   AI-powered Astrology Chat
     <div className="my-3 text-xs text-black/60">
-        Lia is reading the current {chart} chart only🌙
+        Lia is reading {aiIntro} chart only🌙
       </div>
     
 </div>
@@ -118,7 +118,7 @@ export default function AiChat({ chartContext, chart}) {
       e.target.style.height = `${e.target.scrollHeight}px`;
     }}
     rows={1}
-    placeholder={`Ask Lia about the ${chart} chart...`}
+    placeholder={`Ask Lia about ${aiIntro} chart...`}
     className="
       flex-1
       resize-none

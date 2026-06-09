@@ -132,6 +132,7 @@ incrementCount(chart);
   }
 
   return {
+    aiIntro,
     input,
     setInput,
     loading,
