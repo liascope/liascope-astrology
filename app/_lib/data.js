@@ -1,38 +1,38 @@
 export const items = [
-    {
-           title: "Perfection Chart",
-      description:
-        "Focuses on your current year and the area of your life that is most strongly influenced. It is used to identify which themes and life areas are coming to the forefront, based on the annual progression of the natal chart.",
-    },
-    {
-      title: "Progressed Chart",
-      description:
-        "Is a tool to track the development of your astrological influences over time. It shows how your personal development and external circumstances change based on the ongoing movement of the planets. Ideal for recognizing long-term trends and life phases.",
-    },
-    {
-      title: "Draconic Chart",
-      description:
-        "Provides deep insight into your karmic pattern and soul plan. It reveals which themes from past lives or spiritual dimensions are influencing your present life. It’s useful for understanding spiritual and karmic lessons.",
-    },
-    {title: "Natal Chart",
-      description:
-        "Shows the planetary positions at the time of your birth; provides deep insight into your personality, strengths, weaknesses, and life tasks. With this horoscope, you can learn more about your fundamental astrological influences and how they shape your life.",
- 
-    },
-    {title: "Transit Chart",
-      description:
-        "Shows how the current planetary movements influence your birth chart and allows you to understand the ongoing astrological influences on your life, including challenges and opportunities arising from the positions of the planets.",
-    
-    },
+  {
+    title: "Natal Chart",
+    description:
+      "Shows the planetary positions at the time of your birth and provides insight into your personality, strengths, weaknesses, and life path. This chart helps you understand your fundamental astrological influences and how they shape your life.",
+  },
+  {
+    title: "Transit Chart",
+    description:
+      "Shows how current planetary movements influence your birth chart and helps you understand ongoing astrological influences, including challenges and opportunities arising from planetary positions.",
+  },
   {
     title: "Synastry Chart",
     description:
       "Compares two natal charts to reveal the dynamics between individuals. It highlights compatibility, challenges, and key connections, helping you understand how two people interact on emotional, mental, and energetic levels.",
   },
+  {
+    title: "Perfection Chart",
+    description:
+      "Focuses on your current year and the life areas most strongly influenced. It helps identify themes and topics that come to the forefront based on the annual progression of the natal chart.",
+  },
+  {
+    title: "Progressed Chart",
+    description:
+      "Tracks the development of your astrological influences over time. It shows how personal development and external circumstances evolve based on planetary movement and is ideal for recognizing long-term trends and life phases.",
+  },
+  {
+    title: "Draconic Chart",
+    description:
+      "Provides insight into your karmic pattern and soul path. It reveals themes from past lives or spiritual dimensions influencing your present life and helps you understand spiritual and karmic lessons.",
+  },
+];
 
-  ];
-  
-export const intro ='Liascope is an astrological app for astrology interested people who want to gain an initial insight into their personal horoscope. It displays key astrological elements such as planets, houses, and aspects. Chiron and asteroids are not included. Liascope uses the True Lilith and the True Lunar Node.'
+export const intro =
+  "Liascope is an astrological app for astrology-interested users who want to gain an initial insight into their personal horoscope. It displays key astrological elements such as planets, houses, and aspects. Liascope uses the True Lilith.";
 
   export const perfectionHouseDescriptions = {
   1: "focuses on self, personal growth, and outer appearance. This is a time for redefining your identity and projecting yourself into the world.",
