@@ -1,23 +1,41 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
 import { askAI } from '@/app/_actions/askAI';
 import { hasReachedLimit, incrementCount } from '../helper';
 import { MAX_PER_DAY } from '../config';
 import { presets } from '../data';
+import useHorary from './useHorary';
 
-export function useAi(chart, chartContext, selected) {
+export function useAi(chart, chartContext, selected, mode) {
     
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [visiblePresets, setVisiblePresets] = useState([]);
   const [messages, setMessages] = useState([]);
-
+const pathname = usePathname();
 const [expanded, setExpanded] = useState(false);
 const type = selected === 'birth' ? 'Transit' : 'Partner'
 
-const aiIntro = chart === 'transit' ? `the current ${type === 'Partner' ? 'partner' : 'transit'}` : chart === 'natalTransit' ? `${type === 'Partner' ? 'the current synastry' : 'the current transits on your natal'}`
-              : `your ${chart}`
+const transitPath = pathname.split("/")[2]
+const textareaRef = useRef(null);
+
+const {horaryContent} = useHorary();
+
+useLayoutEffect(() => {
+  const textarea = textareaRef.current;
+  if (!textarea) return;
+
+  textarea.style.height = "0px"; // oder "auto"
+  textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
+}, [input]);
+
+
+const aiIntro = useMemo(() =>  chart === 'natalTransit' ? `to explore the current ${type === 'Partner' ? 'Synastry' : 'Transits on your Natal'} Chart` 
+                             : chart === 'Horary' ? 'to get an answer to your next question. Horary mode is on. Ask one clear question.' 
+                             : `to explore the current ${chart} Chart`, [chart, type])
+
 
 function getPresets(chart) {
   if (chart === "natalTransit") {
@@ -25,12 +43,6 @@ function getPresets(chart) {
       ? presets.comparisonTransit
       : presets.comparisonPartner;
   }
-  else if (chart === "transit") {
-      return type === "Transit"
-      ? presets.transit
-      : presets.partner;
-  }
-
   return presets[chart] || [];
 }
 
@@ -45,8 +57,15 @@ function getRandomPresets(chart) {
     .slice(0, 4);
 }
 
-useEffect(() => {
+const chartText = useMemo(()=>{ 
+  if (mode === 'horary') {
+  
+    return horaryContent
+  }
+ else {return chartContext}},
+ [mode, horaryContent, chartContext])
 
+useEffect(() => {
    setVisiblePresets(getRandomPresets(chart));
 
     setMessages([
@@ -54,12 +73,10 @@ useEffect(() => {
         role: 'assistant',
         isIntro: true,
         content:
-          `Hi, I’m Lia ✨\nI’m here to read your scope and help you explore ${aiIntro} chart 🌙`,
+          `Hi, I’m Lia ✨\nI’m here to read your scope and help you ${aiIntro} 🌙`,
       },
     ]);
-  // }
-
-}, [chart,type]);
+}, [aiIntro, chart]);
 
 
   async function sendMessage() {
@@ -90,7 +107,7 @@ useEffect(() => {
 
      try {
 
-    const response = await askAI(chartContext, input);
+    const response = await askAI(chartText, input);
 
 if (!response.success) {
   setMessages(prev => [
@@ -144,5 +161,6 @@ incrementCount(chart);
     isFirstConversation,
     sendMessage,
     getRandomPresets,
+    textareaRef, transitPath, type
   };
 }

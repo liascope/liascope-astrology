@@ -5,9 +5,9 @@ export const items = [
       "Shows the planetary positions at the time of your birth and provides insight into your personality, strengths, weaknesses, and life path. This chart helps you understand your fundamental astrological influences and how they shape your life.",
   },
   {
-    title: "Transit Chart",
+    title: "Transit or Horary Chart",
     description:
-      "Shows how current planetary movements influence your birth chart and helps you understand ongoing astrological influences, including challenges and opportunities arising from planetary positions.",
+     "Shows planetary movements for current transits or time of incident based on given information. Switch to Horary mode to receive guidance on a single, clearly defined question based on the chart cast for the current moment.",
   },
   {
     title: "Synastry Chart",
@@ -73,7 +73,7 @@ export const perfectionSignDescriptions = {
 
 export const presets = {
 
-  natal: [
+  Natal: [
     "What are my greatest strengths?",
     "What are my biggest challenges?",
     "What is my life purpose?",
@@ -88,7 +88,7 @@ export const presets = {
     "What inner conflicts shape me?"
   ],
 
-  transit: [
+  Transit: [
     "What themes are active now?",
     "What opportunities are coming?",
     "What challenges should I expect?",
@@ -102,8 +102,17 @@ export const presets = {
     "How are transits shifting me?",
     "What influences my decisions now?"
   ],
-
-  partner: [
+Horary: [
+  "Will I get the job?",
+  "Will this relationship work out?",
+  "Will they contact me?",
+  "Should I accept this opportunity?",
+  "Will I find what I lost?",
+  "Is this the right decision?",
+  "What is the outcome of this situation?",
+  "What do I need to know about this question?"
+],
+  Partner: [
     "What are their strengths?",
     "What motivates them?",
     "How do they approach relationships?",
@@ -118,7 +127,7 @@ export const presets = {
     "What is their relationship potential?"
   ],
 
-  draconic: [
+  Draconic: [
     "What is my soul lesson?",
     "What is my spiritual purpose?",
     "What gifts do I bring?",
@@ -133,7 +142,7 @@ export const presets = {
     "How do I align with my higher self?"
   ],
 
-  progression: [
+  Progression: [
     "What growth am I in now?",
     "What is evolving in my life?",
     "What life chapter begins?",

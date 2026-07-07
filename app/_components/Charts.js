@@ -12,21 +12,35 @@ import CopyContext from './CopyContext';
 import { usePathname } from 'next/navigation';
 import { capitalize, zodiac } from '../_lib/config';
 import AiChat from './AiChat';
+import { useState } from 'react';
 
 export default function Charts({ chartID }) {
-  const { unknownTime, retro} = useAstroForm();
- 
+
+  const [mode, setMode] = useState('transit')
+  const { unknownTime, retro, selected} = useAstroForm();
+
  // Chart & Aspect Table & Aspect List, House and Planet Positions Lists
   const { aspect, planetList, cuspList } = useRenderCharts(chartID);
 
   // CopyContext Feature
 const pathname = usePathname()
+const page = pathname.split("/").at(-1);
+
+let chartName;
+
+if (page === "external") {
+  chartName = selected === "birth" ? "Transit" : "Partner";
+} else {
+  chartName = capitalize(page);
+}
 const timeUnknown = (["natal", "draconic", "progression"].includes(chartID) && unknownTime?.birth) || (chartID === "transit" && unknownTime?.transit);
-const copyChart = [`${capitalize(pathname.split('/').at(-1))}-Chart:`, "",
+const copyChart = [`${chartName} Chart:`, "",
   ...(timeUnknown ? ["Unknown time, house placements unavailable.", ""] : ["Signs:", ...cuspList.map((c,i) => `H${i+1} ${c.sign}`), ""]),
  "Planets:", ...planetList.map(p => {const house = p.planet === "As" ? 1 : p.planet === "Mc" ? 10 : p.house;
   return `${p.planet} ${retro[chartID]?.includes(p.planet) ? "Retrograde" : ""} ${Object.keys(zodiac).find(s => zodiac[s] === p.symbol)} ${!timeUnknown ? ` H${house}` : ""}`;}),"",
   "Aspects:", ...aspect,"",].join("\n");
+
+// useEffect(()=>console.log(mode),[mode])
 
   useTimeunknown(chartID, unknownTime)
   useRetroPlanets(chartID, retro)
@@ -52,7 +66,7 @@ const copyChart = [`${capitalize(pathname.split('/').at(-1))}-Chart:`, "",
     <div className='absolute sm:top-0 top-6 left-2 z-25'><AspectFilter chartID={chartID}></AspectFilter></div>
 
       <div className='flex items-center justify-center max-[1000px]:h-svw' id={chartID}/>
-      <AiChat chartContext={copyChart} chart={chartID}/>
+      <AiChat chartContext={copyChart} chart={mode === 'horary' ? 'Horary' : chartName} mode={mode} setMode={setMode}/>
        </div>
     </motion.div>
   );

@@ -39,7 +39,7 @@ const getRetro = (planet, chartType) => retro?.[chartType]?.includes(planet) ? "
 const natalInExternal = comparison.map(a =>`Natal ${a.Planet}${getRetro(a.Planet, "natal")} ${a.Natal} in ${type} ${a.TH}H`);
 const externalInNatal = comparison.map(a =>`${type} ${a.Planet}${getRetro(a.Planet, type)} ${a.Transit} in Natal ${a.NH2}H`);
 
-const copyChart = ["Comparison-Chart:", "",  ...(unknownTime?.birth && unknownTime?.transit ? [  "Unknown times. Only aspects can be shown.", '', "Comparison Aspects:", ...aspectText]
+const copyChart = [`Natal & ${type === 'Transit' ? 'Transit' : 'Partner'}-Comparison Chart`, "",  ...(unknownTime?.birth && unknownTime?.transit ? [  "Unknown times. Only aspects can be shown.", '', "Comparison Aspects:", ...aspectText]
     : unknownTime?.birth ? [`Unknown Natal time. Only Natal Signs and Planets in ${type}-Chart can be shown.`, '', `Natal Signs and Planets in ${type}-Chart:`, ...natalInExternal, "", "Comparison Aspects:", ...aspectText]
     : unknownTime?.transit ? [`Unknown ${type} time. Only ${type} Signs and Planets in Natal-Chart can be shown.`, '', `${type} Signs and Planets in Natal-Chart:`, ...externalInNatal, "", "Comparison Aspects:", ...aspectText] : [`Natal Signs and Planets in ${type}-Chart:`, ...natalInExternal, "", `${type} Signs and Planets in Natal-Chart:`, ...externalInNatal, "", "Comparison Aspects:", ...aspectText])].join("\n");
 

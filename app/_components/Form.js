@@ -10,16 +10,17 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import { useAstroForm } from "../_lib/context/AstroContext";
-import { useAutofillPlace } from "../_lib/hooks/useAutofillPlace";
+import useCurrentDateTime from "../_lib/hooks/useCurrentDateTime";
 
 export default function Form() { 
   const router = useRouter(); 
-  const initial = getInitialTransitData(); 
+   const initial = getInitialTransitData(); 
   const { formState, setFormState } = useAstroForm(); 
   const [birthPlaceLabel, setBirthPlaceLabel] = useState(formState?.birthPlaceData ? `${formState.birthPlaceData.city}, ${formState.birthPlaceData.country}` : "");
   const [transitPlaceLabel, setTransitPlaceLabel] = useState( formState?.transitPlaceData ? `${formState.transitPlaceData.city}, ${formState.transitPlaceData.country}`  : "");
  
-  const {data} = useAutofillPlace("placeTransit", initial.transitPlace);
+  // const {data} = useAutofillPlace("placeTransit", initial.transitPlace);
+  const {currentPlace} = useCurrentDateTime();
   const { register, handleSubmit, setValue, watch, formState: { errors }} = useForm({ defaultValues: {...formState, type: formState?.type || 'birth'}, });
 
     const selected = watch("type") 
@@ -31,17 +32,9 @@ export default function Form() {
   setValue("moment", "Now");
   setValue('type', 'birth')
 
- if (!data || data.length === 0) return;
-  const place = {
-    city: data?.[0]?.address?.city || '',
-    country: data?.[0]?.address?.country ||  '',
-    lat: data?.[0]?.lat,
-    lon: data?.[0]?.lon,
-  };
-  // console.log(place)
-  setValue("transitPlaceData", place);
+  setValue("transitPlaceData", currentPlace);
   // prevent race issue on vercel
-  setTimeout(()=>setTransitPlaceLabel(()=>`${place?.city}, ${place?.country}`),100);
+  setTimeout(()=>setTransitPlaceLabel(()=>`${currentPlace?.city}, ${currentPlace?.country}`),100);
  };
 
  function handleType () {

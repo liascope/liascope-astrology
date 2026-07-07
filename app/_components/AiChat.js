@@ -1,16 +1,20 @@
 'use client';
 
 import ReactMarkdown from "react-markdown";
+
+import ArrowUp from "./navicons/ArrowUp";
 import CopyContext from './CopyContext';
 import AiReminder from './AiReminder';
 import AiLimitTracker from "./AiLimitTracker";
+import Horary from "./Horary";
 
 import { useAstroForm } from '../_lib/context/AstroContext';
+import useCurrentDateTime from "../_lib/hooks/useCurrentDateTime";
 import { useAi } from '../_lib/hooks/useAi';
-import ArrowUp from "./navicons/ArrowUp";
 
-export default function AiChat({ chartContext, chart}) {
-  const {selected } = useAstroForm();
+export default function AiChat({ chartContext, chart, mode, setMode}) {
+const {currentDate} = useCurrentDateTime();
+  const {selected} = useAstroForm();
   const {aiIntro, input,
     setInput,
     loading,
@@ -21,7 +25,7 @@ export default function AiChat({ chartContext, chart}) {
     setExpanded,
     isFirstConversation,
     sendMessage,
-    getRandomPresets} = useAi (chart, chartContext, selected)
+    getRandomPresets, textareaRef, transitPath, type} = useAi(chart, chartContext, selected, mode)
 
   return (
 <div
@@ -36,14 +40,16 @@ export default function AiChat({ chartContext, chart}) {
 <div onClick={() => setExpanded(prev => !prev)}
   className="cursor-pointer text-sm font-medium text-black/70 mb-2"
 >
-  AI-powered Astrology Chat
-    <div className="my-3 text-xs text-black/60">
-        Lia is reading {aiIntro} chart only🌙
-      </div>
-    
+ <div className="flex flex-row items-center justify-between">
+  <span> AI-powered Astrology Chat </span>
+  <span onClick={()=>setExpanded(!expanded)}>{(transitPath === 'external' && type === 'Transit') && <Horary mode={mode} setMode={setMode} />}</span> 
+  </div>
+
 </div>
       {/* ai chat */}
       <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+        {/* if answere loaded show date: */}
+        {(mode === 'horary' && messages[2]) && <strong className="text-sm text-[#574534]">Horary Reading for {currentDate}</strong>}
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -59,7 +65,7 @@ export default function AiChat({ chartContext, chart}) {
                       ),
                         }}
                        >
-                   {msg.content}
+                   {msg.content} 
                   </ReactMarkdown>
                   {msg.role === "assistant" && idx !== 0 && (
               <CopyContext copy={msg.content} title='Copy Reading' padding='pr-2'/>
@@ -110,15 +116,11 @@ export default function AiChat({ chartContext, chart}) {
   "
 >
   <textarea
-    value={input}
-    onChange={(e) => {
-      setInput(e.target.value);
-
-      e.target.style.height = "auto";
-      e.target.style.height = `${e.target.scrollHeight}px`;
-    }}
+      ref={textareaRef}
+     value={input}
+    onChange={(e) => setInput(e.target.value)}
     rows={1}
-    placeholder={`Ask Lia about ${aiIntro} chart...`}
+    placeholder={`Ask Lia ${mode === 'horary' ? 'your horary question.' : aiIntro}...`}
     className="
       flex-1
       resize-none

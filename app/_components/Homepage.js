@@ -6,7 +6,7 @@ import Sun from "./navicons/Sun";
   
   const orderedGroups = [
   ["Natal Chart", "Synastry Chart"],
-  ["Transit Chart", "Draconic Chart"],
+  ["Transit or Horary Chart", "Draconic Chart"],
   ["Progressed Chart", "Perfection Chart"]
 ];
   return  <main className="flex flex-col items-center justify-center">  <h2 className="text-[#e89b53] lg:text-xl text-md text-center md:mt-5"> A quick & precise way to get an insight of the most important astrological charts of your scope.
