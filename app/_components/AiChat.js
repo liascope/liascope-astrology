@@ -29,7 +29,7 @@ const {currentDate} = useCurrentDateTime();
 
   return (
 <div
-  className={`flex flex-col rounded-lg border border-white/20 mx-5 backdrop-blur-xl p-3 sm:p-6 shadow-lg transition-all duration-300 ${
+  className={`flex flex-col rounded-lg border border-white/20 mx-5 backdrop-blur-xl p-3 sm:p-6 shadow-lg transition-all duration-300 w-full ${
     expanded ? "h-[650px]" : "h-[420px] relative"
   }`}
 >
@@ -121,7 +121,7 @@ const {currentDate} = useCurrentDateTime();
     onChange={(e) => setInput(e.target.value)}
     rows={1}
     placeholder={`Ask Lia ${mode === 'horary' ? 'your horary question.' : aiIntro}...`}
-    className="
+    className={`
       flex-1
       resize-none
       bg-transparent
@@ -130,9 +130,8 @@ const {currentDate} = useCurrentDateTime();
       text-black/90
       placeholder-white/95
       mb-2
-      max-h-40
-      overflow-y-auto
-    "
+      overflow-y-auto ${(chart === 'natalTransit' && !input) && 'max-h-5'}
+    `}
   />
 
   <button
