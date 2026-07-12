@@ -29,7 +29,7 @@ const {currentDate} = useCurrentDateTime();
 
   return (
 <div
-  className={`flex flex-col rounded-lg border border-white/20 mx-5 backdrop-blur-xl p-3 sm:p-6 shadow-lg transition-all duration-300 w-full ${
+  className={`flex flex-col rounded-lg border border-white/20 mx-5 backdrop-blur-xl p-3 sm:p-6 shadow-lg transition-all duration-300 w-auto ${
     expanded ? "h-[650px]" : "h-[420px] relative"
   }`}
 >
@@ -126,11 +126,14 @@ const {currentDate} = useCurrentDateTime();
       resize-none
       bg-transparent
       outline-none
-      text-sm
+      text-xs
+      sm:text-sm
       text-black/90
       placeholder-white/95
-      mb-2
-      overflow-y-auto ${(chart === 'natalTransit' && !input) && 'max-h-5'}
+      mb-2.5
+      overflow-y-auto 
+      ${(chart === 'natalTransit' && !input) && 'max-h-fit'
+      }
     `}
   />
 
@@ -146,7 +149,7 @@ const {currentDate} = useCurrentDateTime();
       hover:bg-[#e89b53]
       transition-all
       duration-300
-      ${input ? "opacity-100" : "opacity-0 pointer-events-none"}
+      ${input ? "opacity-100" : "opacity-40 pointer-events-none"}
     `}
   >
     <ArrowUp />
