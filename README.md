@@ -34,13 +34,25 @@ Aspect and filter tools
   * Planet & house position lists
   * Flexible filtering of chart aspects
 
-Transit tools
+  AI Astrology Assistant
+
+* Integrated Gemini AI chat available throughout the application
+* The AI automatically uses the currently displayed chart as context (Natal, Synastry, Transit, etc.)
+* Ask natural-language questions about placements, aspects, houses, or chart interpretation
+* Context-aware responses without manually copying chart data
+
+Transit & Horary tools
 
   * Auto-complete of “today’s transits”
   * Select dates easily for transit charts
+* Horary mood is available when viewing Transit charts
+* Switch between interpreting the currently opened Transit chart or a Horary reading
+* In Horary mode, the AI ignores the displayed chart and instead generates a reading based on the current date and time, following traditional horary astrology principles
 
   Reactivity & animations
   Smooth transitions powered by Framer Motion, and responsive UI behaviors.
+
+
 
 🧩 Tech Stack
 
@@ -55,26 +67,22 @@ Transit tools
 * Tailwind CSS – utility-first styling
 * SVG – custom icons, handcrafted for the UI
 * Astrology libraries – @astrodraw/astrochart, js_astro (extended for custom logic)
-* APIs – Timezone (timezonedb), Location (Nominatim)
+* APIs – Timezone (timezonedb), Location (Nominatim), Gemini AI
 * Utilities – Moment.js, Lodash, Cookies-next
 * Tooling – ESLint, Prettier, React Query Devtools
 
- 🧠 What I’ve Learned & Demonstrated
+🧠 What I've Learned & Demonstrated
 
-* Cleanly refactored from vanilla‑JS MVC to a robust React/Next.js architecture
-* Implemented persistent chart storage with localStorage and sessionStorage to maintain state across sessions and page refreshes
-* Built multiple custom React Query hooks, managing loading and error states effectively
-* Mastered form state management with React Hook Form
-* Utilized animations and transitions for better user experience
-* Integrated complex third-party APIs (timezone, nominatim)
-* Rendered astrology charts with precise planetary and cusp calculations
-* Styled a responsive, filterable UI with Tailwind CSS
-* Applied Next.js App Router conventions including custom error and loading pages
-*  Built a custom loader component and implemented a modal window for additional info
-*  Created custom SVG icons for interactive UI elements
-* Worked with APIs and third-party libraries:
-   - Integrated an SVG horoscope rendering library and extended it with DOM manipulation to highlight retrograde planets in red
-   - Adapted a planetary calculation library written in a foreign codebase, first understanding its internal logic and then tailoring it to fit seamlessly into my application
+* Refactored a vanilla JavaScript MVC application into a scalable React/Next.js architecture
+* Implemented persistent state using localStorage and sessionStorage
+* Built reusable custom React Query hooks with proper loading and error handling
+* Managed complex forms with React Hook Form
+* Applied Next.js App Router conventions, including custom loading and error pages
+* Rendered astrology charts with precise planetary and house calculations
+* Extended third-party astrology libraries by adapting their internal logic and adding custom functionality (e.g. retrograde highlighting)
+* Integrated multiple external APIs, including timezone, geolocation, and Google's Gemini API
+* Designed a context-aware AI assistant that dynamically adapts its prompts to the active chart type and supports a dedicated Horary interpretation mode
+* Built a responsive, interactive UI using Tailwind CSS, Framer Motion, custom SVG icons, and reusable UI components
 
 
 🔧 Running the Project
@@ -85,7 +93,7 @@ Transit tools
    ```bash
    npm install
    ```
-3. Add any required API keys (if needed for timezone/nomiatim)
+3. Add the required API keys (Gemini API, TimeZoneDB if applicable)
 4. Run locally
 
    ```bash
@@ -111,6 +119,7 @@ Transit tools
 * js_astro – MIT License
 * Moment.js + Moment Timezone – MIT License, TimeZoneDB Terms of Service
 * Nominatim – Data Policy
+* Google Gemini API – AI-powered astrology assistant
 * Other libraries – Open source under MIT or compatible licenses
 
 Thanks for exploring Liascope-React.
