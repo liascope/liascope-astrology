@@ -1,10 +1,7 @@
 import moment from "moment-timezone";
-import { calPlanetPosition2} from "./calcDegrees";
-import { calHouseCusp2 } from "./calcDegrees";
-import { checkRetrograde } from "./calcDegrees";
-import { TIMEZONE_API_BASE_URL, ASPECTS, zodiac} from "./config";
-import { findSign, fetchData } from "./helper";
-// import { NOMINATIM_URL } from "./config";
+import { calPlanetPosition2, calHouseCusp2, checkRetrograde} from "./calcDegrees";
+import { TIMEZONE_API_BASE_URL, ASPECTS,} from "./config";
+import { findSign, fetchData, createChartData, findPlanetHouses, calcCuspsDraconic} from "./helper";
 
 // CityAutoComplete in Form for lat, lon, city, country 
 // Previously fetched directly against Nominatim, which works in production
@@ -56,7 +53,7 @@ export const calcChart = function (timezoneData, lat, lon, dateString, houseSyst
     const day = jstTime.date();
     const hour = jstTime.hour();
     const minute = jstTime.minute();
-    // data for Chart
+    // data for SVG Chart rendering
     planetPosition = calPlanetPosition2(+year, +month, +day, +hour, +minute, +lon, +lat);
     cuspLongitudes = calHouseCusp2(
       +year,
@@ -109,11 +106,21 @@ if (!uT) {
   planets.As = [Math.trunc(planetPosition[13])];
   planets.Mc = [Math.trunc(planetPosition[14])];
 }
-const positionData = {
+
+const {
+  positionData,
+  planetDetails,
+  cuspDetails,
+} = createChartData({
   planets,
-  cusps: cuspLongitudes, 
-};
-    return { positionData, localTime, utcTime, retroData };
+  cusps: cuspLongitudes,
+});
+
+const draconic = calcCuspsDraconic({planets, cusps:cuspLongitudes}) // same as positionData for draconic
+
+const {   positionData: positionDataDraconic, planetDetails: planetDetailsDraconic, cuspDetails: cuspDetailsDraconic,} = createChartData(draconic);
+
+    return { positionData, localTime, utcTime, retroData, planetDetails, cuspDetails,  positionDataDraconic, planetDetailsDraconic, cuspDetailsDraconic};
   } catch (error) {
     console.log(error)
     console.error(error.message);
@@ -121,14 +128,13 @@ const positionData = {
   }
 };
 
+
 export function calcProgressionDate(birthDate) {
       const birthDateObj = new Date(birthDate);
       const now = new Date();
       // calc days based on birthday
       const age = now.getFullYear() - birthDateObj.getFullYear();
-      // const hasBirthdayPassed =
-      //   now.getMonth() > birthDateObj.getMonth() || (now.getMonth() === birthDateObj.getMonth() && now.getDate() >= birthDateObj.getDate());
-      // if (!hasBirthdayPassed) age--;
+
       // Progression: Date and Age
       const progressionDate = new Date(birthDateObj);
       progressionDate.setDate(progressionDate.getDate() + age); 
@@ -141,27 +147,6 @@ export function calcProgressionDate(birthDate) {
       return formattedProgressionDate
 }
 
-export const calcCuspsDraconic = (data) => {
-  const planets = { ...data.planets };
-  const cusps = [...data.cusps];
-  const nNode = planets.NNode[0];
-  // Calc difference between NNode and 0 degree
-  const nodeToZero = (360 - nNode) % 360;
-  // Update planet position by adding the difference to degrees
-  Object.keys(planets).forEach((planet) => {
-    if (planet !== "NNode") {
-      planets[planet] = planets[planet].map((degree) => (degree + nodeToZero) % 360);
-    }
-  });
-  // Update cusps
-  const updatedCusps = cusps.map((cusp) => (cusp + nodeToZero) % 360);
-  // set NNode to 0 degree
-  planets.NNode = [0];
-  return {
-    planets,
-    cusps: updatedCusps,
-  };
-};
 
 export const perfectionChart = function (age, natalData) {
   const perfectionDegrees = [165, 135, 105, 75, 45, 15, 345, 315, 285, 255, 225, 195];
@@ -175,100 +160,69 @@ export const perfectionChart = function (age, natalData) {
   return {perfectionIndex, perfectionHouse, perfectionData};
 };
 
-export const calculateAspects = (positionData) => {
-  const excludedPairs = new Set(["MC-IC", "MC-As", "MC-Ds", "IC-As", "IC-Ds", "As-Ds", "NNode-SNode"]);
-  const planetEntries = Object.entries(positionData.planets);
-  return planetEntries.flatMap(([planet1, pos1], i) =>
-    planetEntries
+export const calculateAspects = (planetDetails = []) => {
+  const excludedPairs = new Set([
+    "MC-IC",
+    "MC-As",
+    "MC-Ds",
+    "IC-As",
+    "IC-Ds",
+    "As-Ds",
+    "NNode-SNode",
+  ]);
+
+  return planetDetails.flatMap((planet1, i) =>
+    planetDetails
       .slice(i + 1)
-      .filter(([planet2]) => !excludedPairs.has(`${planet1}-${planet2}`) && !excludedPairs.has(`${planet2}-${planet1}`))
-      .flatMap(([planet2, pos2]) => {
-        let angle = Math.abs(pos1[0] - pos2[0]);
+      .filter(
+        (planet2) =>
+          !excludedPairs.has(`${planet1.planet}-${planet2.planet}`) &&
+          !excludedPairs.has(`${planet2.planet}-${planet1.planet}`)
+      )
+      .flatMap((planet2) => {
+        let angle = Math.abs(planet1.longitude - planet2.longitude);
         angle = angle > 180 ? 360 - angle : angle;
-        return ASPECTS.filter(({ angle: aspAngle, orb }) => Math.abs(angle - aspAngle) <= orb).map(({ name, angle: aspAngle }) => ({
-          aspect: { name, degree: angle.toFixed(2) },
-          point: { name: planet1, position: pos1[0] },
-          toPoint: { name: planet2, position: pos2[0] },
-          precision: Math.abs(angle - aspAngle) <= 1 ? 0.5 : 0.0,
+
+        return ASPECTS.filter(
+          ({ angle: aspAngle, orb }) =>
+            Math.abs(angle - aspAngle) <= orb
+        ).map(({ name, angle: aspAngle }) => ({
+          aspect: {
+            name,
+            degree: angle.toFixed(2),
+          },
+          point: {
+            name: planet1.planet,
+            position: planet1.longitude,
+            sign: planet1.sign,
+            symbol: planet1.symbol,
+            house: planet1.house,
+            degree: planet1.position,
+            retrograde: planet1.retrograde,
+          },
+          toPoint: {
+            name: planet2.planet,
+            position: planet2.longitude,
+            sign: planet2.sign,
+            symbol: planet2.symbol,
+            house: planet2.house,
+            degree: planet2.position,
+            retrograde: planet2.retrograde,
+          },
+          precision: Number(
+            Math.abs(angle - aspAngle).toFixed(2)
+          ),
         }));
       })
   );
 };
 
-// aspect in table
- export const generateTableAspects = function (positionData) {
-  const excludedPairs = new Set(["MC-IC", "MC-As", "MC-Ds", "IC-As", "IC-Ds", "As-Ds", "NNode-SNode"]);
-  const planetEntries = Object.entries(positionData?.planets);
-  return planetEntries.flatMap(([planet1, pos1], i) =>
-    planetEntries
-      .slice(i + 1)
-      .filter(([planet2]) => !excludedPairs.has(`${planet1}-${planet2}`) && !excludedPairs.has(`${planet2}-${planet1}`))
-      .flatMap(([planet2, pos2]) => {
-        let angle = Math.abs(pos1[0] - pos2[0]);
-        angle = angle > 180 ? 360 - angle : angle;
-        return ASPECTS.filter(({ angle: aspAngle, orb }) => Math.abs(angle - aspAngle) <= orb).map(({ name, angle: aspAngle }) => ({
-          aspect: { name, degree: angle.toFixed(2) },
-          point: { name: planet1, position: pos1[0] },
-          toPoint: { name: planet2, position: pos2[0] },
-          precision: Math.abs(angle - aspAngle) <= 1 ? 0.5 : 0.0,
-        }))?.map((a) => `${a.point.name} ${a.aspect.name} ${a.toPoint.name}`);
-      })
-  );
-};
-
-// cusps & planet lists
-
-// a helper-fn 
- const findPlanetHouses = function (cusps, planets) {
-  const houseAssignments = {};
-  for (const [planet, positions] of Object.entries(planets)) {
-    houseAssignments[planet] = positions.map((position) => {
-      // Other planets: calculation based on cusps
-      for (let i = 0; i < cusps.length; i++) {
-        let nextIndex = (i + 1) % cusps.length;
-        let cuspStart = cusps[i];
-        let cuspEnd = cusps[nextIndex];
-        // Calc houses based on cusps
-        if (cuspStart < cuspEnd) {
-          if (position >= cuspStart && position < cuspEnd) {
-            return i + 1; // return house no
-          }
-        } else {
-          // cusp from 359° to 0°
-          if (position >= cuspStart || position < cuspEnd) {
-            return i + 1;
-          }
-        }
-      }
-      return null; 
-    });
-  }
-  return houseAssignments;
-};
-
-export function generateAllListData(data) {
-  if (!data || !data.planets || !data.cusps) return null;
-
-  const houseAssignments = findPlanetHouses(data.cusps, data.planets);
-  const planetList = Object.keys(data.planets).map((planet) => {
-    const houseNumber = houseAssignments?.[planet]?.[0];
-    const symbol = zodiac[findSign(data.planets[planet])] || findSign(data.planets[planet]);
-    return { planet, symbol, house: houseNumber };
-  });
-  const cuspList = data.cusps.map((c, i) => {
-    const label = i === 0 ? "House 1 (AC)" : i === 3 ? "House 4 (IC)" : i === 6 ? "House 7 (DC)" : i === 9 ? "House 10 (MC)" : `House ${i + 1}`;
-    return { house: label, sign: findSign(c) };
-  });
-  return {
-    planetList,
-    cuspList
-  };
-}
 
 export const generateComparisonTable = function (natalData, transitData, unknownTime) {
   const { planets: planetsNatal, cusps: cuspsNatal } = natalData;
   const { planets: planetsTransit, cusps: cuspsTransit } = transitData;
-  const getHouse = (cusps, planetDegrees) => findPlanetHouses(cusps, { temp: [planetDegrees] }).temp[0] || "";
+  // const getHouse = (cusps, planetDegrees) => findPlanetHouses(cusps, { temp: [planetDegrees] }).temp[0] || "";
+  const getHouse = (cusps, planetDegrees) => findPlanetHouses(cusps, { temp: [planetDegrees] }).temp || "";
   const getSign = (degree) => findSign(degree) || "";
   return Object.entries(planetsNatal)
     .filter(([planet]) => planetsTransit[planet] !== undefined) // filter undefined values
