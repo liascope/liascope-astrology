@@ -1,8 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, useMemo, useEffect,} from 'react';
-import { calcProgressionDate, calcCuspsDraconic, perfectionChart, calcChart } from '@/app/_lib/data-service';
-import { formatDateTime, calculateAge } from '@/app/_lib/helper';
+import { calcProgressionDate, perfectionChart, calcChart } from '@/app/_lib/data-service';
+import { formatDateTime, calculateAge, calcCuspsDraconic } from '@/app/_lib/helper';
 
 const AstroContext = createContext();
 
@@ -38,7 +38,7 @@ const chartData = useMemo(() => {if (!natalData || !transitData || !progressionD
   const derivedData = useMemo(() => {
     if (!formState || !chartData?.natalData) return null; const age = calculateAge(formState.birthDate); 
     const perfectionDate = perfectionChart(age, chartData?.natalData?.positionData)
-    return { perfection: perfectionDate?.perfectionData, draconic: calcCuspsDraconic(chartData?.natalData?.positionData), };}, 
+    return { perfection: perfectionDate?.perfectionData, draconic: chartData?.natalData?.positionDataDraconic};}, 
     [formState, chartData]);
 
 const contextValue = useMemo(() => ({
@@ -52,16 +52,22 @@ const contextValue = useMemo(() => ({
   progressionData: chartData?.progressionData?.positionData,
   draconicData: derivedData?.draconic,
   perfectionData: derivedData?.perfection,
+
+  natalDetails: {planets : chartData?.natalData?.planetDetails, cusps:chartData?.natalData?.cuspDetails},
+  transitDetails: {planets : chartData?.transitData?.planetDetails, cusps:chartData?.transitData?.cuspDetails},
+  progressionDetails: {planets : chartData?.progressionData?.planetDetails, cusps:chartData?.progressionData?.cuspDetails},
+  draconicDetails: {planets : chartData?.natalData?.planetDetailsDraconic, cusps:chartData?.natalData?.cuspDetailsDraconic},
+
   retro: {
     natal: chartData?.natalData?.retroData || [],
     transit: chartData?.transitData?.retroData || [],
     progression: chartData?.progressionData?.retroData || [],
+    draconic: chartData?.natalData?.retroData || [],
   },
 }), [formState, unknownTime, chartData, derivedData]);
 
   return (
-    <AstroContext.Provider
-      value={contextValue}> {children}</AstroContext.Provider>); }
+    <AstroContext.Provider value={contextValue}> {children}</AstroContext.Provider>); }
 
 // Custom Hook zum Zugriff auf den Context
 export function useAstroForm() {
