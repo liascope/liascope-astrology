@@ -21,7 +21,7 @@ const type = selected === 'birth' ? 'Transit' : 'Partner'
 const transitPath = pathname.split("/")[2]
 const textareaRef = useRef(null);
 
-const {horaryContent} = useHorary();
+const {horaryContent} = useHorary(mode);
 
 useLayoutEffect(() => {
   const textarea = textareaRef.current;

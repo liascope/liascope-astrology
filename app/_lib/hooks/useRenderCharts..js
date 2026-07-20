@@ -1,7 +1,5 @@
 import { useMemo, useEffect} from "react";
-import { calculateAspects, generateTableAspects, generateAllListData, } from "../data-service";
-import { aspectToSymbol } from "../helper";
-// import * as astrochart from "@astrodraw/astrochart";
+import { calculateAspects} from "../data-service";
 import { settings, zodiac } from "../config";
 import { useAstroForm } from "@/app/_lib/context/AstroContext";
 
@@ -9,7 +7,8 @@ import { useAstroForm } from "@/app/_lib/context/AstroContext";
 export function useRenderCharts(chartID) {
   const context = useAstroForm();
 
-  const data = context[`${chartID}Data`] ?? null;
+   const data = context[`${chartID}Data`] ?? null;
+  const dataDetails = context[`${chartID}Details`] ?? null;
 
   // Chart Rendering
  useEffect(() => {if (!data) return;
@@ -19,24 +18,16 @@ export function useRenderCharts(chartID) {
   import('@astrodraw/astrochart').then((astrochart) => {const el = document.getElementById(chartID);
   if (el) el.innerHTML = "";
     const chart = new astrochart.Chart(chartID, 900, 900, settings);zodiac
-    chartID === "perfection" ? chart.radix(data) : chart.radix(data).aspects(calculateAspects(data));
+    chartID === "perfection" ? chart.radix(data) : chart.radix(data).aspects(calculateAspects(dataDetails?.planets));
     chartInstance = chart;
   });
 
   return () => {const el = document.getElementById(chartID); if (el) el.innerHTML = ""; chartInstance = null; };
-}, [data, chartID]);
+}, [dataDetails,data, chartID]);
 
   // Aspects Table
-  const aspect = useMemo(() => { if (!data) return []; return generateTableAspects(data);}, [data]);
+  const aspect = useMemo(() => { if (!dataDetails) return []; return calculateAspects(dataDetails?.planets)?.map(({ point, aspect, toPoint, precision }) => `${point.name} ${data?.retroData?.includes(point.name) ? "retrograde" : ""} ${point.degree} ${aspect.name} ${toPoint.name} ${data?.retroData?.includes(toPoint.name) ? "retrograde" : ""} ${point.retrograde ? 'retrograde' : ''} ${toPoint.degree} - ${precision}`
+);}, [dataDetails, data]);
 
-  const aspectList = useMemo(() => aspectToSymbol(aspect), [aspect]);
-
-  // List Data (Planets, Cusps)
-  const { planetList, cuspList } = useMemo(() => {
-    if (!data) return { planetList: [], cuspList: [] };
-    const generated = generateAllListData(data, chartID === "transit" ? "uT" : "");
-    return { planetList: generated?.planetList || [], cuspList: generated?.cuspList || [],};
-  }, [data, chartID]);
-
-  return { aspect, aspectList, planetList, cuspList, };
+  return { aspect, planetList:dataDetails?.planets, cuspList: dataDetails?.cusps};
 }

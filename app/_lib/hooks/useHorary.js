@@ -1,17 +1,19 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import useCurrentDateTime from "./useCurrentDateTime";
-import {zodiac} from "../config";
-import { calcChart, generateAllListData, generateTableAspects, fetchTimezone } from "../data-service";
+import { calcChart, fetchTimezone, calculateAspects } from "../data-service";
 
 
-export default function useHorary () {
+export default function useHorary (mode) {
     const [timezone, setTimezone] = useState('')
    const {currentPlace, currentDate} = useCurrentDateTime();
 
 useEffect(() => {
-if (!currentPlace?.place) return;
+ 
+if (mode !== 'horary' || !currentPlace?.place) return;
+
+
     const loadTimezone = async () => {
       try {
         const tz = await fetchTimezone(currentPlace?.lat, currentPlace?.lon);
@@ -22,33 +24,21 @@ if (!currentPlace?.place) return;
     };
 
     loadTimezone();
-  }, [currentPlace]);
+  }, [currentPlace, mode]);
 
-const horary = calcChart(timezone,currentPlace?.lat, currentPlace?.lon, currentDate,3,false)
 
-const signInHouse = generateAllListData(horary.positionData);
-const aspect = generateTableAspects(horary.positionData)
+const {retroData, planetDetails, cuspDetails } = calcChart(timezone,currentPlace?.lat, currentPlace?.lon, currentDate,3,false)
+ 
+  const aspect = useMemo(() => { if (!planetDetails) return []; return calculateAspects(planetDetails)?.map(({ point, aspect, toPoint, precision }) => `${point.name} ${retroData?.includes(point.name) ? "retrograde" : ""} ${point.degree} ${aspect.name} ${toPoint.name} ${retroData?.includes(toPoint.name) ? "retrograde" : ""} ${point.retrograde ? 'retrograde' : ''} ${toPoint.degree} - ${precision}`
+);}, [planetDetails, retroData]);
 
-const copyChart = [
-  'Horary Chart',
-  "",
-  "Signs:",
-  ...signInHouse.cuspList.map((c, i) => `H${i + 1} ${c.sign}`),
-  "",
-  "Planets:",
-  ...signInHouse.planetList.map((p) => {
-    const house =
-      p.planet === "As" ? 1 : p.planet === "Mc" ? 10 : p.house;
 
-   return `${p.planet} ${
-  Object.keys(zodiac).find((s) => zodiac[s] === p.symbol)
-} H${house}`;;
+const copyChart = ['Horary Chart:', "",
+  "Signs:", ...cuspDetails.map((c,i) => `${c.planet.replace("House ", "H")} ${c.position} ${c.sign}`), "",
+ "Planets:", ...planetDetails.map(p => {p.planet === "As" ? 1 : p.planet === "Mc" ? 10 : p.house;
+  return `${p.planet} ${retroData?.includes(p.planet) ? "retrograde" : ""} ${p.position} ${p.sign}`;}),"",
+  "Aspects:", ...aspect,"",].join("\n");
 
-  }),
-  "",
-  "Aspects:",
-  ...aspect,
-].join("\n");
 
 return {horaryContent: copyChart}
 
