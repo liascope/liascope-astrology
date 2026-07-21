@@ -6,12 +6,11 @@ import { useEffect } from 'react';
 import AspectTableTransitNatal from './AspectTableTransitNatal';
 import { settings, symbols, aspectSymbols} from '@/app/_lib/config';
 import NatalTransitHouseSign from './NatalTransitHouseSign';
-import useTimeunknown from '@/app/_lib/hooks/useTimeunknown';
-import useRetroPlanets from '@/app/_lib/hooks/useRetroPlanets';
 import { calculateAspectsBetweenCharts, generateComparisonTable } from '@/app/_lib/data-service';
 import AspectFilter from './AspectFilter';
 import CopyContext from './CopyContext';
 import AiChat from './AiChat';
+import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
 
 export default function NatalTransitWrapper({ chartID }) {
 
@@ -43,8 +42,7 @@ const copyChart = [`Natal & ${type === 'Transit' ? 'Transit' : 'Partner'}-Compar
     : unknownTime?.birth ? [`Unknown Natal time. Only Natal Signs and Planets in ${type}-Chart can be shown.`, '', `Natal Signs and Planets in ${type}-Chart:`, ...natalInExternal, "", "Comparison Aspects:", ...aspectText]
     : unknownTime?.transit ? [`Unknown ${type} time. Only ${type} Signs and Planets in Natal-Chart can be shown.`, '', `${type} Signs and Planets in Natal-Chart:`, ...externalInNatal, "", "Comparison Aspects:", ...aspectText] : [`Natal Signs and Planets in ${type}-Chart:`, ...natalInExternal, "", `${type} Signs and Planets in Natal-Chart:`, ...externalInNatal, "", "Comparison Aspects:", ...aspectText])].join("\n");
 
-  useTimeunknown(chartID, unknownTime);
-  useRetroPlanets(chartID, retro);
+  useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
 
   // render combined Natal + Transit chart
   useEffect(() => {

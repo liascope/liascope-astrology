@@ -5,14 +5,13 @@ import AspectTable from '@/app/_components/AspectTable';
 import { useRenderCharts } from '@/app/_lib/hooks/useRenderCharts.';
 import HouseSignList from './HouseSignList';
 import { useAstroForm } from '../_lib/context/AstroContext';
-import useTimeunknown from '@/app/_lib/hooks/useTimeunknown';
-import useRetroPlanets from '@/app/_lib/hooks/useRetroPlanets';
 import AspectFilter from './AspectFilter';
 import CopyContext from './CopyContext';
 import { usePathname } from 'next/navigation';
-import { capitalize, zodiac } from '../_lib/config';
+import { capitalize } from '../_lib/config';
 import AiChat from './AiChat';
-import { useState } from 'react';
+import { useState} from 'react';
+import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
 
 export default function Charts({ chartID }) {
 
@@ -34,16 +33,14 @@ if (page === "external") {
   chartName = capitalize(page);
 }
 const timeUnknown = (["natal", "draconic", "progression"].includes(chartID) && unknownTime?.birth) || (chartID === "transit" && unknownTime?.transit);
+
 const copyChart = [`${chartName} Chart:`, "",
-  ...(timeUnknown ? ["Unknown time, house placements unavailable.", ""] : ["Signs:", ...cuspList.map((c,i) => `H${i+1} ${c.sign}`), ""]),
+  ...(timeUnknown ? ["Unknown time, house placements unavailable.", ""] : ["Signs:", ...cuspList.map((c,i) => `${c.planet.replace("House ", "H")} ${c.position} ${c.sign}`), ""]),
  "Planets:", ...planetList.map(p => {const house = p.planet === "As" ? 1 : p.planet === "Mc" ? 10 : p.house;
-  return `${p.planet} ${retro[chartID]?.includes(p.planet) ? "Retrograde" : ""} ${Object.keys(zodiac).find(s => zodiac[s] === p.symbol)} ${!timeUnknown ? ` H${house}` : ""}`;}),"",
+  return `${p.planet} ${retro[chartID]?.includes(p.planet) ? "retrograde" : ""} ${p.position} ${p.sign} ${!timeUnknown ? ` H${house}` : ""}`;}),"",
   "Aspects:", ...aspect,"",].join("\n");
 
-// useEffect(()=>console.log(mode),[mode])
-
-  useTimeunknown(chartID, unknownTime)
-  useRetroPlanets(chartID, retro)
+  useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime)
 
   return (
     <motion.div
