@@ -11,7 +11,7 @@ export default function AspectTable({ aspect }) {
       gridTemplateColumns: `repeat(${planetNames.length}, minmax(0, 1fr))`,
       gridAutoRows: "1fr"
     }}
-  >
+  > 
     {/* Rows */}
     {planetNames.map((planet, i) => {
       const planetAspects = aspect?.filter((a) => a.includes(planet));

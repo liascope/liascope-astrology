@@ -14,9 +14,7 @@ export default function HouseSignList({ data }) {
   if (!showHouses) {
     return (
       <ul className="ml-[6rem]">
-        {data.planetList
-          .filter((p) => !["Mc", "As", "SNode"].includes(p.planet))
-          .map((p, i) => (
+        {data?.planetList?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))?.map((p, i) => (
             <li key={i} className="text-justify space-x-2 flex gap-2">
               <span className="w-[20%] ">{p.planet}</span>
               <span className="grayscale">{p.symbol}</span>
@@ -30,20 +28,21 @@ export default function HouseSignList({ data }) {
     <div className="w-screen sm:w-full flex flex-row md:text-sm justify-evenly py-7">
       {data.cuspList?.length > 0 && (
         <ul className="pr-4 sm:pr-7 border-r border-gray-300 ">
-          {data.cuspList.map((cusp, i) => (
+          {data?.cuspList?.map((cusp, i) => (
             <li key={i} className="flex gap-4 sm:gap-6">
-              <span className=" w-[70%]">{cusp.house}</span>
+             <span className="flex w-[70%] gap-1"> <span >{cusp.planet}</span>
+              <span className=" text-xs scale-80">{cusp.position}</span></span>
               <span>{cusp.sign}</span>
             </li>
           ))}
         </ul>
       )}
       <ul>
-        {data.planetList
-          .filter((p) => !["Mc", "As", "SNode"].includes(p.planet))
-          .map((p, i) => (
+        {data?.planetList?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))?.map((p, i) => (
             <li key={i} className="text-justify sm:space-x-2 flex gap-2">
-              <span className="w-[40%] ">{p.planet}</span>
+              <span className="flex w-[40%] gap-1 "><span >{p.planet}</span>
+               <span className=" text-xs scale-80">{p.position}</span>
+               </span>
               <span className="w-[40%]  text-end px-1">{`${p.house} H`}</span>
               <span className="grayscale">{p.symbol}</span>
             </li>
