@@ -33,7 +33,7 @@ useLayoutEffect(() => {
 
 
 const aiIntro = useMemo(() =>  chart === 'natalTransit' ? `to explore the current ${type === 'Partner' ? 'Synastry' : 'Transits on your Natal'} Chart` 
-                             : chart === 'Horary' ? 'to get an answer to your next question. Horary mode is on. Ask one clear question.' 
+                             : chart === 'Horary' ? 'to get an answer to your horary question. Ask one clear question.'
                              : `to explore the current ${chart} Chart`, [chart, type])
 
 
