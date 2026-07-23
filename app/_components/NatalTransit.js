@@ -13,8 +13,9 @@ import AiChat from './AiChat';
 import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
 
 export default function NatalTransitWrapper({ chartID }) {
-
-  const { natalData, transitData, unknownTime, retro, selected } = useAstroForm();
+ 
+  const { natalData, transitData, unknownTime, retro, selected, natalDetails, transitDetails } = useAstroForm();
+    
   const type = selected === 'birth' ? 'Transit' : 'Partner'
 
   // Comparison Aspects
@@ -31,19 +32,12 @@ export default function NatalTransitWrapper({ chartID }) {
       return `Natal ${a.planet} ${name} ${type} ${symbols[x.index].at(-1)}`;}));
 
   // Comparison Planets, Signs and Houses
-const comparison = generateComparisonTable(natalData, transitData, [unknownTime?.birth, unknownTime?.transit]);
+const comparison = generateComparisonTable(natalDetails, transitDetails, [unknownTime?.birth, unknownTime?.transit])?.comparison;
+const comparisonPlanetHouses = generateComparisonTable(natalDetails, transitDetails, [unknownTime?.birth, unknownTime?.transit], retro)?.comparisonPlanetHouses;
 
-const getRetro = (planet, chartType) => retro?.[chartType]?.includes(planet) ? " Retrograde" : "";
+const copyChart = [`Natal & ${type}-Comparison Chart`, "", (comparisonPlanetHouses(type)), '', `Natal & ${type} Comparison Aspects:`, '', ...aspectText].join("\n");
 
-const natalInExternal = comparison.map(a =>`Natal ${a.Planet}${getRetro(a.Planet, "natal")} ${a.Natal} in ${type} ${a.TH}H`);
-const externalInNatal = comparison.map(a =>`${type} ${a.Planet}${getRetro(a.Planet, type)} ${a.Transit} in Natal ${a.NH2}H`);
-
-const copyChart = [`Natal & ${type === 'Transit' ? 'Transit' : 'Partner'}-Comparison Chart`, "",  ...(unknownTime?.birth && unknownTime?.transit ? [  "Unknown times. Only aspects can be shown.", '', "Comparison Aspects:", ...aspectText]
-    : unknownTime?.birth ? [`Unknown Natal time. Only Natal Signs and Planets in ${type}-Chart can be shown.`, '', `${type === 'Partner' ? `Natal Signs and Planets in ${type}-Chart:` : ''}`, ...(type === 'Partner' ? natalInExternal : []), "", "Comparison Aspects:", ...aspectText]
-    : unknownTime?.transit ? [`Unknown ${type} time. Only ${type} Signs and Planets in Natal-Chart can be shown.`, '', `${type} Signs and Planets in Natal-Chart:`, ...externalInNatal, "", "Comparison Aspects:", ...aspectText] : [`Natal Signs and Planets in ${type}-Chart:`, ...natalInExternal, "", `${type} Signs and Planets in Natal-Chart:`, ...externalInNatal, "", "Comparison Aspects:", ...aspectText])].join("\n");
-
-  useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
-
+useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
   // render combined Natal + Transit chart
   useEffect(() => {
     if (!natalData || !transitData) return;
