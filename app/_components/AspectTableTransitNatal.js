@@ -11,7 +11,7 @@ export default function AspectTableTransitNatal({planets, aspectMatrix}) {
       gridTemplateColumns: `repeat(${planets.length + 1}, minmax(0, 1fr))`,
       gridAutoRows: "1fr" 
     }}
-  >
+  > 
    {/* header */}
     <div></div>
     {planets.map((p) => (
@@ -20,7 +20,6 @@ export default function AspectTableTransitNatal({planets, aspectMatrix}) {
         className="font-bold text-sm gridContainer text-[#3f638d]"
       >
         {symbols.find((s) => s[1] === p)?.[0]}
-        {/* {(selected === 'birth' ? "ᵗ" : 'ᵖ')} */}
       </div>
     ))}
 

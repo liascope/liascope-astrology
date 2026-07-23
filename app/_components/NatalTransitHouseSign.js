@@ -1,12 +1,14 @@
 export default function NatalTransitHouseSign ({comparison, selected}) {
 
+
   return <div className="rounded-sm py-5 sm:rounded-md sm:w-full h-fit">
   <div
-    className="grid text-center text-xs sm:text-sm md:text-base"
+    className="grid text-center text-xs md:text-sm"
     style={{
       gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
     }}
   >
+
 
     {/* Header */}
     <div className="font-bold pb-1 gridContainer">Planet</div>
@@ -20,10 +22,10 @@ export default function NatalTransitHouseSign ({comparison, selected}) {
     {/* Rows */}
     {comparison.map((row, idx) => [
       <div key={`${idx}-Planet`} className="font-bold p-1 gridContainer">{row.Planet}</div>,
-      <div key={`${idx}-Natal`} className="gridContainer">{row.Natal}</div>,
+      <div key={`${idx}-Natal`} className="gridContainer">{row.Natal} <div className="scale-80 text-xs">{row.NatalPosition}</div></div>,
       <div key={`${idx}-NH`} className="gridContainer">{row.NH}</div>,
       <div key={`${idx}-TH`} className="gridContainer">{row.TH}</div>,
-      <div key={`${idx}-Transit`} className="gridContainer ">{row.Transit}</div>,
+      <div key={`${idx}-Transit`} className="gridContainer">{row.Transit} <div className="scale-80 text-xs">{row.TransitPosition}</div></div>,
       <div key={`${idx}-TH2`} className="gridContainer">{row.TH2}</div>,
       <div key={`${idx}-NH2`} className="border-b flex items-center justify-center border-gray-300">{row.NH2}</div>
     ])}
