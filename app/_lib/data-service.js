@@ -1,7 +1,7 @@
 import moment from "moment-timezone";
 import { calPlanetPosition2, calHouseCusp2, checkRetrograde} from "./calcDegrees";
 import { TIMEZONE_API_BASE_URL, ASPECTS,} from "./config";
-import { findSign, fetchData, createChartData, findPlanetHouses, calcCuspsDraconic} from "./helper";
+import { fetchData, createChartData, findPlanetHouses, calcCuspsDraconic} from "./helper";
 
 // CityAutoComplete in Form for lat, lon, city, country 
 // Previously fetched directly against Nominatim, which works in production
@@ -218,23 +218,35 @@ export const calculateAspects = (planetDetails = []) => {
 };
 
 
-export const generateComparisonTable = function (natalData, transitData, unknownTime) {
-  const { planets: planetsNatal, cusps: cuspsNatal } = natalData;
-  const { planets: planetsTransit, cusps: cuspsTransit } = transitData;
-  // const getHouse = (cusps, planetDegrees) => findPlanetHouses(cusps, { temp: [planetDegrees] }).temp[0] || "";
+export const generateComparisonTable = function (natalDetail, transitDetails, unknownTime, retro) {
+  const {planets: transitp, cusps: transitc} = transitDetails;
+  const {planets: natalp, cusps: natalc} = natalDetail;
+ 
   const getHouse = (cusps, planetDegrees) => findPlanetHouses(cusps, { temp: [planetDegrees] }).temp || "";
-  const getSign = (degree) => findSign(degree) || "";
-  return Object.entries(planetsNatal)
-    .filter(([planet]) => planetsTransit[planet] !== undefined) // filter undefined values
-    .map(([planet, degrees]) => ({
-      Planet: planet,
-      Natal: getSign(degrees[0]),
-      NH: unknownTime[0] ? "" : `${planet === "Mc" ? 10 : planet === "As" ? 1 : getHouse(cuspsNatal, degrees[0])}`,
-      TH: unknownTime[1] ? "" : getHouse(cuspsTransit, degrees[0]),
-      Transit: getSign(planetsTransit[planet][0]),
-      TH2: unknownTime[1] ? "" : `${planet === "Mc" ? 10 : planet === "As" ? 1 : getHouse(cuspsTransit, planetsTransit[planet][0])}`,
-      NH2: unknownTime[0] ? "" : getHouse(cuspsNatal, planetsTransit[planet][0]),
+
+  const comparison = natalp?.map((planet) => ({
+      Planet: planet.planet,
+      Natal: planet.sign,
+      NatalPosition: planet.position,
+      NH: unknownTime[0] ? "" : `${planet.planet === "Mc" ? 10 : planet.planet === "As" ? 1 : planet.house}`,
+      TH: unknownTime[1] ? "" : getHouse(transitc?.map(c=>c?.longitude), planet.longitude),
+      Transit: transitp?.find(p => p.planet === planet.planet)?.sign,
+      TransitPosition: transitp?.find(p => p.planet === planet.planet)?.position,
+      TH2: unknownTime[1] ? "" : `${planet.planet === "Mc" ? 10 : planet.planet === "As" ? 1 : transitp?.find(p => p.planet === planet.planet)?.house}`,
+      NH2: unknownTime[0] ? "" : getHouse(natalc?.map(c=>c?.longitude), transitp?.find(p => p.planet === planet.planet)?.longitude),
     }));
+
+     const timeBasedComparison = comparison.filter(p =>!(unknownTime[0] || unknownTime[1]) ||(p.Planet !== "As" && p.Planet !== "Mc"));
+
+
+   const transitOrPartnerInNatal = (transitOrPartner) => timeBasedComparison?.map((d)=>(`${transitOrPartner} ${d.Planet} ${retro?.['transit'].includes(d.Planet) ? " Retrograde" : ""} in ${d.Transit + ' ' + d.TransitPosition} in Natal ${d.NH2}H`))?.join("\n")
+
+   const natalInPartner = (transitOrPartner) => timeBasedComparison.map((d)=>(`Natal ${d.Planet} ${retro?.['natal'].includes(d.Planet) ? "Retrograde" : ""} in ${d.Natal + ' ' + d.NatalPosition} in ${transitOrPartner} ${d.TH}H`))?.join("\n")
+   
+    const comparisonPlanetHouses = (transitOrPartner) => (unknownTime[0] && unknownTime[1]) ? `Unknown Natal time and ${transitOrPartner} time. Only sign and planet aspects can be shown.` : unknownTime[0] ? `Unknown Natal time. Only Natal Signs and Planets in ${transitOrPartner}-Chart can be shown.` + natalInPartner(transitOrPartner) : unknownTime[1] ? `Unknown ${transitOrPartner} time. Only ${transitOrPartner} Signs and Planets in Natal Chart can be shown.\n\n${transitOrPartner} in Natal Chart:\n\n${transitOrPartnerInNatal(transitOrPartner)}` : `${transitOrPartner} Signs and Planets in Natal Chart:\n\n${transitOrPartnerInNatal(transitOrPartner)}\n\nNatal Signs and Planets in ${transitOrPartner} Chart:\n\n${natalInPartner(transitOrPartner)}`
+
+
+    return {comparison, comparisonPlanetHouses}
 };
 
 export const calculateAspectsBetweenCharts = (natalData, transitData) => {
