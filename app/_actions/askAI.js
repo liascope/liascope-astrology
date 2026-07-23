@@ -23,6 +23,10 @@ Use only chart factors strictly relevant to the question.
 If missing data, say so.
 No introductions or self-reference.
 Use markdown bullets and headings.
+
+If the topic is "Natal & Transit-Comparison Chart", ignore Natal Signs and Planets in Transit Chart and 
+analyze only Transit Signs and Planets in Natal Chart and Natal & Transit Comparison Aspects.
+
 Be insightful, concise and easy to understand.
 Include detailed examples when relevant.
 
@@ -92,4 +96,3 @@ console.log("TOKEN USAGE:", {
     };
   }
 }
-  
