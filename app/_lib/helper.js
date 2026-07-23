@@ -46,7 +46,7 @@ export const findPlanetHouses = (cusps, planets) => {
 
   for (const [planet, [position]] of Object.entries(planets)) {
 
-    // AC und MC sind Sonderfälle
+    // check AC and MC 
     if (planet === "As") {
       houseAssignments.As = 1;
       continue;

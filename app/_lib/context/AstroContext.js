@@ -69,7 +69,6 @@ const contextValue = useMemo(() => ({
   return (
     <AstroContext.Provider value={contextValue}> {children}</AstroContext.Provider>); }
 
-// Custom Hook zum Zugriff auf den Context
 export function useAstroForm() {
   const context = useContext(AstroContext);
   if (!context) {

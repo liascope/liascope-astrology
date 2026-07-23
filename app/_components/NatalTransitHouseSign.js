@@ -1,6 +1,5 @@
 export default function NatalTransitHouseSign ({comparison, selected}) {
 
-
   return <div className="rounded-sm py-5 sm:rounded-md sm:w-full h-fit">
   <div
     className="grid text-center text-xs md:text-sm"
@@ -8,7 +7,6 @@ export default function NatalTransitHouseSign ({comparison, selected}) {
       gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
     }}
   >
-
 
     {/* Header */}
     <div className="font-bold pb-1 gridContainer">Planet</div>

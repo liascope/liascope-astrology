@@ -10,7 +10,7 @@ const {unknownTime, selected}=useAstroForm()
 
   const links = [
     { href: "/charts/natal", label: "Natal" },
-    { href: "/charts/external", label: `${selected === 'birth' ? 'Transit / Horary' : 'Partner Natal' }`},
+    { href: "/charts/external", label: `${selected === 'birth' ? 'Transit & Horary' : 'Partner Natal' }`},
     { href: "/charts/comparison", label: `${selected === 'birth' ? 'Natal & Transit' : 'Synastry'}` },
     { href: "/charts/progression", label: "Progression" },
     { href: "/charts/draconic", label: "Draconic" },

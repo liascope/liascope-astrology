@@ -14,8 +14,6 @@ import Sun from "./navicons/Sun";
       
       <div className="lg:flex hidden items-center justify-center tracking-wider relative mb-28 min-h-[750px] min-w-screen">  
 
-    
-        
         <Button type="openForm">
         <div className="btnEffect flex flex-row items-center">Your<Sun/>Scope</div> </Button>
 
