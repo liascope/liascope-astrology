@@ -31,7 +31,7 @@ export default function HouseSignList({ data }) {
           {data?.cuspList?.map((cusp, i) => (
             <li key={i} className="flex gap-4 sm:gap-6">
              <span className="flex w-[70%] gap-1"> <span >{cusp.planet}</span>
-              <span className=" text-xs scale-80">{cusp.position}</span></span>
+              <span className=" text-xs scale-75">{cusp.position}</span></span>
               <span>{cusp.sign}</span>
             </li>
           ))}
@@ -41,7 +41,7 @@ export default function HouseSignList({ data }) {
         {data?.planetList?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))?.map((p, i) => (
             <li key={i} className="text-justify sm:space-x-2 flex gap-2">
               <span className="flex w-[40%] gap-1 "><span >{p.planet}</span>
-               <span className=" text-xs scale-80">{p.position}</span>
+               <span className=" text-xs scale-75">{p.position}</span>
                </span>
               <span className="w-[40%]  text-end px-1">{`${p.house} H`}</span>
               <span className="grayscale">{p.symbol}</span>
