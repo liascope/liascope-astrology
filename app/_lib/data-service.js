@@ -85,21 +85,21 @@ const fortune = planetPosition[1] < normalize360(planetPosition[13]+180) ? (plan
 
 // console.log(retroData)
  const planets = {
-  Sun: [Math.trunc(planetPosition[1])],
-  Moon: [Math.trunc(planetPosition[2])],
-  Mercury: [Math.trunc(planetPosition[3])],
-  Venus: [Math.trunc(planetPosition[4])],
-  Mars: [Math.trunc(planetPosition[5])],
-  Jupiter: [Math.trunc(planetPosition[6])],
-  Saturn: [Math.trunc(planetPosition[7])],
-  Uranus: [Math.trunc(planetPosition[8])],
-  Neptune: [Math.trunc(planetPosition[9])],
-  Pluto: [Math.trunc(planetPosition[10])],
-  NNode: [Math.trunc(planetPosition[11])],
-  SNode: [normalize360(Math.trunc(planetPosition[11]+180))],
-  Lilith: [Math.trunc(planetPosition[12])],
-  Chiron: [Math.trunc(planetPosition[19])],
-  Fortune: [normalize360(Math.trunc(fortune))]
+  Sun: [planetPosition[1]],
+  Moon: [planetPosition[2]],
+  Mercury: [planetPosition[3]],
+  Venus: [planetPosition[4]],
+  Mars: [planetPosition[5]],
+  Jupiter: [planetPosition[6]],
+  Saturn: [planetPosition[7]],
+  Uranus: [planetPosition[8]],
+  Neptune: [planetPosition[9]],
+  Pluto: [planetPosition[10]],
+  NNode: [planetPosition[11]],
+  SNode: [normalize360(planetPosition[11]+180)],
+  Lilith: [planetPosition[12]],
+  Chiron: [planetPosition[19]],
+  Fortune: [normalize360(fortune)]
 };
 
 if (!uT) {

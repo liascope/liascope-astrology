@@ -93,7 +93,7 @@ export const createPlanet = (
 
   const degreeFloat = normalizedLongitude % 30;
   const degree = Math.trunc(degreeFloat);
-  const minutes = Math.round((degreeFloat - degree) * 60);
+  const minutes = Math.trunc((degreeFloat - degree) * 60);
 
   let house = null;
 
@@ -186,6 +186,7 @@ export function calcDataDetailsDerived(data) {
     cuspList
   };
 }
+
 export const calcCuspsDraconic = (data) => {
   const planets = { ...data.planets };
   const cusps = [...data.cusps];
