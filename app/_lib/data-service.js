@@ -103,8 +103,8 @@ const fortune = planetPosition[1] < normalize360(planetPosition[13]+180) ? (plan
 };
 
 if (!uT) {
-  planets.As = [Math.trunc(planetPosition[13])];
-  planets.Mc = [Math.trunc(planetPosition[14])];
+  planets.As = [planetPosition[13]];
+  planets.Mc = [planetPosition[14]];
 }
 
 const {
