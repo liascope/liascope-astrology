@@ -4,16 +4,7 @@ import { aspectSymbols, zodiac, chartMap, MAX_PER_DAY } from "./config";
 export const getChartType = (pathname) => Object.entries(chartMap).find(([type, paths]) => 
   paths.includes(pathname))?.[0] || null;
 
-export const validateDate = (value) => {
-  const date = new Date(value);
-  const year = date.getFullYear();
-  const now = new Date().getFullYear();
 
-  if (isNaN(date.getTime())) return "Invalid date";
-  if (year < 1700 || year > now) return "Invalid year";
-
-  return true;
-};
 
 export const getSymbolFromAspect = (aspect) => {
   return (Object.entries(aspectSymbols).find(([key]) => aspect.includes(key))?.[1] || "");};
@@ -76,12 +67,13 @@ export const findPlanetHouses = (cusps, planets) => {
   }
   return houseAssignments;
 };
+
 export function formatDateTime(date, time) {
   
   return `${date.split('-').reverse().join('.')} ${time.replace(':', '.')}`;
 }
 
-export const createPlanet = (
+const createPlanet = (
   planet,
   normalizedLongitude,cusps = [],
   
@@ -166,26 +158,6 @@ export const createChartData = ({ planets, cusps }) => {
 };
 
 // cusps & planet lists for draconic & horary
-// data = positionData 
-export function calcDataDetailsDerived(data) {
-  if (!data || !data.planets || !data.cusps) return null;
-
-  const houseAssignments = findPlanetHouses(data.cusps, data.planets);
-  const planetList = Object.keys(data.planets).map((planet) => {
-    const houseNumber = houseAssignments?.[planet]?.[0];
-    const symbol = zodiac[findSign(data.planets[planet])] || findSign(data.planets[planet]);
-    return { planet, symbol, house: houseNumber };
-  });
-  const cuspList = data.cusps.map((c, i) => {
-    const label = i === 0 ? "House 1 (AC)" : i === 3 ? "House 4 (IC)" : i === 6 ? "House 7 (DC)" : i === 9 ? "House 10 (MC)" : `House ${i + 1}`;
-    return { house: label, sign: findSign(c) };
-  });
-  
-  return {
-    planetList,
-    cuspList
-  };
-}
 
 export const calcCuspsDraconic = (data) => {
   const planets = { ...data.planets };
@@ -216,13 +188,6 @@ export const formatDate = (dateString) => {
   const [year, month, day] = dateString.split('-');
   return `${day}.${month}.${year}`;
 };
-
-export function aspectToSymbol(arrAspect = []) {
-  return arrAspect.map((aspect) => {
-    const aspectName = aspect.split(" ")[1];
-    return aspectSymbols[aspectName] ? aspect.replace(aspectName, aspectSymbols[aspectName]) : aspect;
-  });
-}
 
 export function calculateAge(birthDate) {
   const today = new Date();
@@ -258,6 +223,17 @@ export function getInitialTransitData() {
     transitPlace,
   };
 }
+
+// check invalid date input
+export const validateDate = (value) => {
+  const date = new Date(value);
+  const year = date.getFullYear();
+
+  if (isNaN(date.getTime())) return "Invalid date";
+  if (year < 1700) return "Invalid year";
+
+  return true;
+};
 
 // AiChat question limit functions:
 function getLimitKey(chart) {

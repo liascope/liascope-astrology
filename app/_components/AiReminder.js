@@ -1,8 +1,8 @@
 'use client'
 import { useState } from "react"
+
 export default function AiReminder() {
 const [showReminder, setShowReminder] = useState(true);
-
 
 {return showReminder &&
  (

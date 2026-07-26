@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AstroProvider } from '../_lib/context/AstroContext';
 import { useState } from 'react';
+
 export default function Provider({ children }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {

@@ -7,6 +7,7 @@ import Button from './Button';
 import Loader from './Loader';
 import Trash from './navicons/Trash';
 import useSavedProfiles from '../_lib/hooks/useSavedProfiles';
+
 export function Profiles() {
 
  const {loading, profiles, error, deleteProfile} = useSavedProfiles();

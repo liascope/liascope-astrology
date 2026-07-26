@@ -83,7 +83,6 @@ const normalize360 = (deg) => (deg % 360 + 360) % 360;
 // ASC-based Part of Fortune calculation; switches between day/night formula using Sun vs ASC+180 (Descendant axis) to determine sect
 const fortune = planetPosition[1] < normalize360(planetPosition[13]+180) ? (planetPosition[13] + planetPosition[1]) - planetPosition[2] : (planetPosition[13] + planetPosition[2]) - planetPosition[1]
 
-// console.log(retroData)
  const planets = {
   Sun: [planetPosition[1]],
   Moon: [planetPosition[2]],

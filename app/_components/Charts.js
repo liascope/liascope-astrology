@@ -1,16 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import AspectTable from '@/app/_components/AspectTable';
-import { useRenderCharts } from '@/app/_lib/hooks/useRenderCharts.';
+import { useState} from 'react';
+import { usePathname } from 'next/navigation';
+
+import AspectTable from './AspectTable';
 import HouseSignList from './HouseSignList';
-import { useAstroForm } from '../_lib/context/AstroContext';
 import AspectFilter from './AspectFilter';
 import CopyContext from './CopyContext';
-import { usePathname } from 'next/navigation';
-import { capitalize } from '../_lib/config';
 import AiChat from './AiChat';
-import { useState} from 'react';
+
+import { capitalize } from '../_lib/config';
+import { useRenderCharts } from '../_lib/hooks/useRenderCharts.';
+import { useAstroForm } from '../_lib/context/AstroContext';
 import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
 
 export default function Charts({ chartID }) {

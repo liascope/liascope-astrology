@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useState } from 'react';
 import Modal from "./Modal";
 import Info from "./navicons/Info";
+
 export default function Header(){
  const [open, setOpen] = useState(false);
 

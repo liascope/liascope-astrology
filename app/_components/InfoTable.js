@@ -1,4 +1,5 @@
 import { aspectSymbols, dignity } from "@/app/_lib/config";
+
 export default function InfoTable() {
   return (<>
     <ul className="py-3"> 

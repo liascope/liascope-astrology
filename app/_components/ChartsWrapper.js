@@ -1,8 +1,9 @@
 'use client';
 
-import { useAstroForm } from "../_lib/context/AstroContext";
 import Loader from "./Loader";
 import Button from "./Button";
+
+import { useAstroForm } from "../_lib/context/AstroContext";
 
 export default function ChartsWrapper({ children}) {
   const { natalData } = useAstroForm();
