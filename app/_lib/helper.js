@@ -68,11 +68,6 @@ export const findPlanetHouses = (cusps, planets) => {
   return houseAssignments;
 };
 
-export function formatDateTime(date, time) {
-  
-  return `${date.split('-').reverse().join('.')} ${time.replace(':', '.')}`;
-}
-
 const createPlanet = (
   planet,
   normalizedLongitude,cusps = [],
@@ -183,11 +178,17 @@ if (planet !== "NNode") {
     cusps: updatedCusps,
   };
 };
+
 export const formatDate = (dateString) => {
   if (!dateString) return '—';
   const [year, month, day] = dateString.split('-');
   return `${day}.${month}.${year}`;
 };
+
+export function formatDateTime(date, time) {
+  
+  return `${date.split('-').reverse().join('.')} ${time.replace(':', '.')}`;
+}
 
 export function calculateAge(birthDate) {
   const today = new Date();
