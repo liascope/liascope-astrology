@@ -2,7 +2,7 @@ import { aspectSymbols, dignity } from "@/app/_lib/config";
 
 export default function InfoTable() {
   return (<>
-    <ul className="py-3"> 
+    <ul className="py-3b"> 
          <h3 className="pt-3">Letter Meanings:</h3>
       {dignity.map(([symbol, meaning]) => (
         <li key={symbol}>

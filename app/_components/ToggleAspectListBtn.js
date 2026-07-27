@@ -22,7 +22,7 @@ export default function ToggleAspectListBtn ({
     : isOpen ? "▼" : "▲"
 
   return (
-    <div className={` ${className}`}>
+    <div className={`text-xs ${className}`}>
       <button onClick={() => setIsOpen(!isOpen)} className="btnEffect absolute md:left-3">
         {`${buttonLabel} ${icon}`}
       </button>

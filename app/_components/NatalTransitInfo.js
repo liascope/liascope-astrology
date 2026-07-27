@@ -13,7 +13,7 @@ export default function NatalTransitInfo() {
  if (!formState) {return ( <Loader size='w-[6rem]'></Loader> );}
 
 return ( 
-<div className=" bg-white/30 backdrop-blur-md p-4 rounded-xl h-fit w-full flex flex-col gap-2">
+<div className=" bg-white/30 backdrop-blur-md p-4 rounded-xl h-fit w-full flex flex-col gap-2 shadow-cyan-600/10 inset-shadow-sm ">
  <div className="flex flex-row w-full gap-1 sm:justify-between justify-end">
   <Button type='savedCharts'/>
   <div className="h-7 w-0.5 bg-[rgb(232,155,83,0.3)] sm:w-0 mx-3"></div> <Button type='openForm'><Edit/></Button>
