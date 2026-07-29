@@ -4,51 +4,96 @@ import { getSymbolFromAspect } from "@/app/_lib/helper";
 export default function AspectTable({ aspect }) {
   const planetNames = symbols.map((s) => s[1]);
 
-  return ( <div className="w-screen sm:w-full px-2.5 md:px-5">
-  <div
-    className="grid text-center text-sm sm:text-base"
-    style={{
-      gridTemplateColumns: `repeat(${planetNames.length}, minmax(0, 1fr))`,
-      gridAutoRows: "1fr"
-    }}
-  > 
-    {/* Rows */}
-    {planetNames.map((planet, i) => {
-      const planetAspects = aspect?.filter((a) => a.includes(planet));
+ return (
+  <div className="w-full flex justify-center py-2">
 
-      // empty cells before header
-      const emptyCells = Array.from({ length: i }).map((_, k) => (
-        <div key={`empty-${i}-${k}`} className=""></div>
-      ));
+    <div className="w-[min(96vw,420px)] sm:w-[min(90vw,520px)]">
 
-      // header
-      const headerCell = (
-        <div
-          key={`header-${i}`}
-          className="text-[#4fa091] text-sm p-1 font-bold gridContainer"
-        >
-          {symbols.find((s) => s[1] === planet)?.[0] || planet}
-        </div>
-      );
+      <div
+        className="grid overflow-hidden"
+        style={{
+          gridTemplateColumns: `repeat(${planetNames.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {planetNames.map((planet, i) => {
+          const planetAspects = aspect?.filter((a) =>
+            a.includes(planet)
+          );
 
-      // rest
-      const dataCells = planetNames.slice(i + 1).map((p, j) => {
-        const asp = planetAspects?.find((a) => a.includes(p));
-        const symbol = asp ? getSymbolFromAspect(asp) : "";
-        return (
-          <div
-            key={`cell-${i}-${j}`}
-            className="p-1  gridContainer"
-          >
-            {symbol}
-          </div>
-        );
-      });
+          const emptyCells = Array.from({ length: i }).map((_, k) => (
+            <div
+              key={`empty-${i}-${k}`}
+              className="aspect-square"
+            />
+          ));
 
-      // all together
-      return [...emptyCells, headerCell, ...dataCells];
-    })}
+          const headerCell = (
+            <div
+              key={`header-${i}`}
+              className="
+                aspect-square
+                flex
+                items-center
+                justify-center
+                border
+                border-[#607f6a]/20
+                font-bold
+                text-[#607f6a]
+                text-xs
+                sm:text-sm
+                md:text-base
+              "
+            >
+              {symbols.find((s) => s[1] === planet)?.[0] || planet}
+            </div>
+          );
+
+          const dataCells = planetNames
+            .slice(i + 1)
+            .map((p, j) => {
+              const asp = planetAspects?.find((a) =>
+                a.includes(p)
+              );
+
+              const symbol = asp
+                ? getSymbolFromAspect(asp)
+                : "";
+
+              return (
+                <div
+                  key={`cell-${i}-${j}`}
+                  className="
+                    aspect-square
+                    flex
+                    items-center
+                    justify-center
+                    border
+                    border-[#947936cc]/20
+                    text-[#947936cc]
+                    font-medium
+                    text-xs
+                    sm:text-sm
+                    md:text-base
+                    transition-colors
+                    duration-200
+                    hover:bg-white/20
+                  "
+                >
+                  {symbol}
+                </div>
+              );
+            });
+
+          return [
+            ...emptyCells,
+            headerCell,
+            ...dataCells,
+          ];
+        })}
+      </div>
+
+    </div>
+
   </div>
-</div>
-  );
+);
 }

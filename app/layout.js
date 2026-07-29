@@ -34,11 +34,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <Header></Header>
-    <Provider>{children}</Provider>
-    <CookieBanner></CookieBanner>
-     <Footer></Footer>
+
+    <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+        <Header />
+        <Provider>
+          <main className="flex-1 w-full">
+            {children}
+          </main>
+        </Provider>
+        <CookieBanner />
+        <Footer />
       </body>
     </html>
   );

@@ -6,16 +6,17 @@ export default function HouseSignList({ data }) {
   const pathname = usePathname();
   const path = pathname.replace('/charts/', '');
   const isNatalType = ['natal', 'progression', 'draconic'].includes(path);
-  const showHouses = !(
-    (isNatalType && unknownTime?.birth) ||
-    (path === 'transit' && unknownTime?.transit)
-  );
+
+  const showHouses = !((isNatalType && unknownTime?.birth) || (path === 'external' && unknownTime?.transit));
 
   if (!showHouses) {
     return (
-      <ul className="ml-[6rem]">
+      <ul className="flex flex-col items-center py-7">
+  <h3 className="mb-4 text-center font-medium tracking-wide text-[#607f6a]">
+            Planets
+          </h3>
         {data?.planetList?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))?.map((p, i) => (
-            <li key={i} className="text-justify space-x-2 flex gap-2">
+            <li key={i} className="text-justify space-x-2 flex flex-row justify-between w-[20%]">
               <span className="w-[20%] ">{p.planet}</span>
               <span className="grayscale">{p.symbol}</span>
             </li>
@@ -24,31 +25,133 @@ export default function HouseSignList({ data }) {
     );
   }
 
-  return (
-    <div className="w-screen sm:w-full flex flex-row md:text-sm justify-evenly py-7">
+return (
+  <div className="w-full flex justify-center text-xs sm:text-sm py-7 my-5">
+
+    <div className="flex gap-5 sm:gap-8">
+
+      {/* Houses */}
       {data.cuspList?.length > 0 && (
-        <ul className="pr-4 sm:pr-7 border-r border-gray-300 ">
-          {data?.cuspList?.map((cusp, i) => (
-            <li key={i} className="flex gap-4 sm:gap-6">
-             <span className="flex w-[70%] gap-1"> <span >{cusp.planet}</span>
-              <span className=" text-xs scale-75">{cusp.position}</span></span>
-              <span>{cusp.sign}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="pr-5 sm:pr-8 border-r border-[#607f6a]/20">
+
+          <h3 className="mb-3 text-center text-[#607f6a] font-medium tracking-wide">
+            Houses
+          </h3>
+
+          <ul className="space-y-1">
+
+            {data.cuspList.map((cusp, i) => (
+              <li
+                key={i}
+                className="
+                  grid
+                  grid-cols-[4rem_2rem_4rem]
+                  items-center
+                  gap-4
+                "
+              >
+
+                {/* House name */}
+                <span className="font-medium text-[#40584a]">
+                  {cusp.planet}
+                </span>
+
+
+                {/* Position */}
+                <span
+                  className="
+                    text-[10px]
+                    sm:text-xs
+                    text-neutral-500
+                  "
+                >
+                  {cusp.position}
+                </span>
+
+
+                {/* Sign */}
+                <span className="text-[#607f6a]">
+                  {cusp.sign}
+                </span>
+
+              </li>
+            ))}
+
+          </ul>
+
+        </div>
       )}
-      <ul>
-        {data?.planetList?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))?.map((p, i) => (
-            <li key={i} className="text-justify sm:space-x-2 flex gap-2">
-              <span className="flex w-[40%] gap-1 "><span >{p.planet}</span>
-               <span className=" text-xs scale-75">{p.position}</span>
-               </span>
-              <span className="w-[40%]  text-end px-1">{`${p.house} H`}</span>
-              <span className="grayscale">{p.symbol}</span>
+
+
+
+      {/* Planets */}
+      <div>
+
+        <h3 className="mb-3 text-center text-[#607f6a] font-medium tracking-wide">
+          Planets
+        </h3>
+
+
+        <ul className="space-y-1">
+
+          {data.planetList
+            ?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))
+            ?.map((p, i) => (
+
+            <li
+              key={i}
+              className="
+                grid
+                grid-cols-[4rem_3rem_1rem_1rem]
+                items-center
+                gap-3
+              "
+            >
+
+              {/* Planet */}
+              <span className="font-medium text-[#40584a]">
+                {p.planet}
+              </span>
+
+
+              {/* Position */}
+              <span
+                className="
+                  text-[10px]
+                  sm:text-xs
+                  text-neutral-500
+                "
+              >
+                {p.position}
+              </span>
+
+
+              {/* House */}
+              <span className="text-neutral-500 text-right">
+                {p.house}H
+              </span>
+
+
+              {/* Symbol */}
+              <span className="grayscale">
+                {p.symbol}
+              </span>
+
+
             </li>
+
           ))}
-      </ul>
+
+        </ul>
+
+      </div>
+
     </div>
-  );
+
+  </div>
+);
 }
+
+
+
 

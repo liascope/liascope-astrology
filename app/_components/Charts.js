@@ -14,6 +14,7 @@ import { capitalize } from '../_lib/config';
 import { useRenderCharts } from '../_lib/hooks/useRenderCharts.';
 import { useAstroForm } from '../_lib/context/AstroContext';
 import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
+import InfoTable from './InfoTable';
 
 export default function Charts({ chartID }) {
 
@@ -46,7 +47,7 @@ const copyChart = [`${chartName} Chart:`, "",
 
   return (
     <motion.div
-      className="flex flex-row max-[1000px]:flex-col-reverse w-screen md:w-full justify-between"
+      className="flex flex-row max-[1000px]:flex-col-reverse w-full justify-between"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -7 }}
@@ -54,15 +55,20 @@ const copyChart = [`${chartName} Chart:`, "",
     >
       <div className="min-[1000px]:w-[40%] min-w-0 h-fit flex flex-col">
   
-        <div className="w-screen min-[1000px]:w-full flex flex-col gap-5 ">
+        <div className="min-[1000px]:w-full flex flex-col gap-5 ">
           <CopyContext copy={copyChart}/>
         <HouseSignList data={{ planetList, cuspList }} />
         <AspectTable aspect={aspect} />
        </div>  
       </div>
+
     <div className='relative min-[1000px]:w-[60%] min-w-0'>
-    
-    <div className='absolute sm:top-0 top-6 left-2 z-25'><AspectFilter chartID={chartID}></AspectFilter></div>
+
+    <div className='w-full flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
+      <AspectFilter chartID={chartID}/>
+      <InfoTable></InfoTable>
+      
+      </div>
 
       <div className='flex items-center justify-center max-[1000px]:h-svw' id={chartID}/>
       <AiChat chartContext={copyChart} chart={mode === 'horary' ? 'Horary' : chartName} mode={mode} setMode={setMode}/>

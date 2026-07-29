@@ -11,6 +11,7 @@ import AspectFilter from './AspectFilter';
 import CopyContext from './CopyContext';
 import AiChat from './AiChat';
 import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
+import InfoTable from './InfoTable';
 
 export default function NatalTransitWrapper({ chartID }) {
  
@@ -22,10 +23,7 @@ export default function NatalTransitWrapper({ chartID }) {
   const aspects = calculateAspectsBetweenCharts(natalData, transitData);
   const planets = symbols.map(([, name]) => name);
 
-  const aspectMatrix = planets.map((natalPlanet) => { return {planet: natalPlanet,
-      aspects: planets.map((transitPlanet) => {const match = aspects.find(
-          (a) => a.point.name === natalPlanet && a.toPoint.name === transitPlanet);
-        return match ? aspectSymbols[match.aspect.name] : "";}),};});
+  const aspectMatrix = planets.map((natalPlanet) => { return {planet: natalPlanet, aspects: planets.map((transitPlanet) => {const match = aspects.find((a) => a.point.name === natalPlanet && a.toPoint.name === transitPlanet); return match ? aspectSymbols[match.aspect.name] :"";}),};});
 
   const aspectText = aspectMatrix.flatMap(a => a.aspects.map((symbol, index) => ({ symbol, index })).filter(x => x.symbol).map(x => {
       const name = Object.entries(aspectSymbols).find(([, v]) => v === x.symbol)?.[0] || "";
@@ -74,16 +72,16 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
 
   return (
     <motion.div
-      className="w-screen min-[1625px]:w-full"
+      className="min-[1625px]:w-full"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -4 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="flex flex-col-reverse min-[1625px]:flex-row justify-around w-screen min-[1625px]:w-full h-fit relative">
+      <div className="flex flex-col-reverse min-[1625px]:flex-row justify-around min-[1625px]:w-full h-fit relative">
         {/* Left panel: tables */}
       
-        <div className="flex flex-col min-[1625px]:items-baseline items-center min-[1625px]:w-[40rem] h-fit gap-5 w-screen p-2">
+        <div className="flex flex-col min-[1625px]:items-baseline items-center min-[1625px]:w-[40rem] h-fit gap-5">
            <CopyContext copy={copyChart}/>
           <NatalTransitHouseSign comparison={comparison} selected={selected} />
           <AspectTableTransitNatal planets={planets} aspects={aspects} aspectMatrix={aspectMatrix} />
@@ -91,9 +89,9 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
 
         {/* Right panel: chart + filter */}
         <div className="relative">
-          <div className="absolute top-0 left-2 z-25">
-            <AspectFilter chartID={chartID} />
-          </div>
+         <div className='w-full flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
+               <AspectFilter chartID={chartID}/>
+               <InfoTable></InfoTable></div>
           <div className='flex flex-col'>
           <div className="min-[1625px]:block flex items-center justify-center h-svw min-[1625px]:h-fit" id={chartID} />
             <AiChat chartContext={copyChart} chart={chartID}></AiChat>

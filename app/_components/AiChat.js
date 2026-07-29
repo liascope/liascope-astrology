@@ -56,9 +56,7 @@ const {currentDate} = useCurrentDateTime();
             className={
               msg.role === 'user'
                 ? 'sm:text-base text-sm ml-auto max-w-[80%] rounded-xl rounded-tr-none  bg-gradient-to-br from-[rgb(232,155,83,0.7)] to-[rgba(230,193,85,0.1)] text-black/80 p-3 shadow-sm backdrop-blur-md'
-                : 'sm:text-base text-sm whitespace-pre-line mr-auto max-w-[80%] rounded-xl rounded-tl-none bg-gradient-to-br from-[rgba(230,193,85,0.6)] to-[rgb(232,155,83,0.1)] text-black/80 p-3 shadow-sm backdrop-blur-md'
-            }
-          >
+                : 'sm:text-base text-sm whitespace-pre-line mr-auto max-w-[80%] rounded-xl rounded-tl-none bg-gradient-to-br from-[rgba(230,193,85,0.6)] to-[rgb(232,155,83,0.1)] text-black/80 p-3 shadow-sm backdrop-blur-md'}>
            <ReactMarkdown
                   components={{
                     strong: ({ children }) => ( <span>{children}</span>
@@ -87,55 +85,29 @@ const {currentDate} = useCurrentDateTime();
         <button
           key={preset}
           onClick={() => setInput(preset)}
-          className="shrink-0 rounded-full px-3 py-1 text-xs border border-[rgb(232,155,83,0.7)] hover:bg-gradient-to-br hover:to-[rgb(232,155,83,0.4)]"
+          className="shrink-0 rounded-full px-3 py-1 text-sm border border-[rgb(232,155,83,0.7)] hover:bg-gradient-to-br hover:to-[rgb(232,155,83,0.4)]"
         >
           {preset}
         </button>
       ))}
     </div>
     <button
-  onClick={() =>
-    setVisiblePresets(getRandomPresets(chart))
-  }
-  className="text-right text-[10px] text-black/40 hover:text-black/70 mt-2"
->
-  refresh suggestions ↻
-</button>
+  onClick={() => setVisiblePresets(getRandomPresets(chart))}
+  className="text-right text-xs text-black/40 hover:text-black/70 mt-2"> refresh suggestions ↻ </button>
   </div>
 )}
   {/* chat */}
-   <div
-  className="
-    relative
-    flex items-end
-    rounded-3xl
-    border border-white/20
-    bg-[rgb(96,127,106,0.4)]
-    backdrop-blur-md
-    pr-1 pl-5 py-1
-  "
->
+   <div className="relative flex items-end rounded-3xl border border-white/20
+    bg-[rgb(96,127,106,0.4)] backdrop-blur-md">
   <textarea
       ref={textareaRef}
      value={input}
     onChange={(e) => setInput(e.target.value)}
     rows={1}
     placeholder={`Ask Lia ${mode === 'horary' ? 'your horary question.' : aiIntro}...`}
-    className={`
-      flex-1
-      resize-none
-      bg-transparent
-      outline-none
-      text-xs
-      sm:text-sm
-      text-black/90
-      placeholder-white/95
-      mb-2.5
-      overflow-y-auto 
-      ${(chart === 'natalTransit' && !input) && 'max-h-fit'
-      }
-    `}
-  />
+    className={` flex-1 resize-none md:pl-7 bg-transparent outline-none md:text-sm text-xs pl-4 pt-1
+      text-black/90  placeholder-white/95 mb-2.5 overflow-y-auto 
+      ${(chart === 'natalTransit' && !input) && 'max-h-fit'}`}/>
 
   <button
     onClick={sendMessage}

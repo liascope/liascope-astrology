@@ -1,58 +1,239 @@
+'use client'
+
 import { items } from "@/app/_lib/data";
 import Button from "./Button";
 import Sun from "./navicons/Sun";
+import { useState } from "react";
 
- export default function Homepage (){
-  
+ export default function Homepage() {
+
+const [openCard, setOpenCard] = useState("Natal Chart");
+
   const orderedGroups = [
-  ["Natal Chart", "Synastry Chart"],
-  ["Transit or Horary Chart", "Draconic Chart"],
-  ["Progressed Chart", "Perfection Chart"]
-];
-  return  <main className="flex flex-col items-center justify-center">  <h2 className="text-[#e89b53] lg:text-xl text-md text-center md:mt-5"> A quick & precise way to get an insight of the most important astrological charts of your scope.
-      </h2> 
-      
-      <div className="lg:flex hidden items-center justify-center tracking-wider relative mb-28 min-h-[750px] min-w-screen">  
+    ["Natal Chart", "Synastry Chart"],
+    ["Transit or Horary Chart", "Draconic Chart"],
+    ["Progressed Chart", "Perfection Chart"]
+  ];
 
-        <Button type="openForm">
-        <div className="btnEffect flex flex-row items-center">Your<Sun/>Scope</div> </Button>
+  return (
+    <main className="
+      min-h-screen
+      w-full
+      flex
+      flex-col
+      items-center
+      px-4
+    ">
 
-        {items.map((item, i) => {
-          const angle = (360 / items.length) * i;
-          return (
-            <div
-              key={i}
-              className="absolute text-center md:w-60 lg:w-72 circle-wrapper p-5"
-              style={{transform: `rotate(${angle}deg) translate(var(--radius)) rotate(-${angle}deg)`,}}
-            >
-              <h3 className="text-[#607f6a]">{item.title}</h3>
-              <p className="text-sm leading-relaxed">{item.description}</p>
-            </div>
-          );
-        }
-        )}</div>
+      {/* Hero Text */}
+   <section
+  className="
+    flex
+    flex-col
+    items-center
+    text-center
+    max-w-3xl
+    pt-3
+    md:pt-16
+    lg:mb-40
+  "
+>
 
-          {/* small screen: */}
-       <div className="px-2 flex lg:hidden md:text-base flex-col items-center mt-6 min-h-screen w-full sm:text-sm text-xs gap-6">
- <div className="grid grid-rows-3 gap-4 w-full">
-      {orderedGroups.map((group, rowIndex) => (
-        <div
-          key={rowIndex}
-          className="grid grid-cols-2 gap-4 md:text-center"
-        >
-          {group.map((title) => {
-            const item = items.find((i) => i.title === title);
-            return (
-              <div key={item.title}>
-                <h3 className="text-[#607f6a]">{item.title}</h3>
-                <p className=" md:text-base text-xs">{item.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      ))}
+        <p className="
+       -mt-4
+          max-w-xl
+          text-base
+          md:text-lg
+          leading-relaxed
+          text-[#e89b53]
+          mb-2
+          md:mb-0
+        ">
+          A quick & precise way to get an insight of the most important
+          astrological charts of your scope.
+        </p>
+
+      </section>
+
+
+      {/* Desktop Orbit */}
+
+<div
+className="
+hidden
+lg:flex
+relative
+items-center
+justify-center
+h-[820px]
+w-[820px]
+mb-80
+"
+>
+
+        {/* Center Button */}
+   <Button type="openForm">
+    <div className="btnEffect">
+        <span>Your</span>
+        <Sun />
+        <span>Scope</span>
     </div>
-  <Button type="openForm"><div className="btnEffect flex flex-row items-center">Your<Sun/>Scope</div> </Button>
+</Button>
+
+
+     {items.map((item, i) => {
+
+  const angle = (360 / items.length) * i;
+  const radius = 360;
+
+  return (
+    <div
+      key={i}
+      className="
+        absolute
+        w-64
+        p-6
+        rounded-3xl
+        bg-white/70
+        backdrop-blur-xl
+        border
+        border-black/5
+        shadow-md
+        text-center
+        transition-all
+        duration-300
+        hover:-translate-y-2
+        hover:shadow-xl
+      "
+      style={{
+        transform: `
+          rotate(${angle}deg)
+          translate(${radius}px)
+          rotate(-${angle}deg)
+        `
+      }}
+    >
+
+      <h3
+        className="
+          text-lg
+          font-medium
+          text-[#40584a]
+          mb-2
+        "
+      >
+        {item.title}
+      </h3>
+
+
+      <p
+        className="
+          text-sm
+          leading-relaxed
+          text-neutral-600
+        "
+      >
+        {item.description}
+      </p>
+
+    </div>
+  );
+})}
+
+      </div>
+
+
+
+      {/* Mobile Layout */}
+     <div className="lg:hidden grid gap-4">
+  {orderedGroups.flat().map((title) => {
+
+    const item = items.find(i => i.title === title);
+
+    const open = openCard === item.title;
+
+    return (
+
+      <div
+        key={item.title}
+        className="
+          rounded-3xl
+          bg-white/40
+          backdrop-blur-md
+          border border-white/40
+          shadow-sm
+          overflow-hidden
+        "
+      >
+
+        <button
+          type="button"
+          onClick={() =>
+            setOpenCard(open ? null : item.title)
+          }
+          className="
+            w-full
+            flex
+            items-center
+            justify-between
+            p-5
+            text-left
+          "
+        >
+
+          <h3 className="text-[#40584a] font-medium">
+            {item.title}
+          </h3>
+
+        <span
+  className={`
+    transition-all
+    duration-300
+    text-[#947936cc]
+    ${open ? "scale-110" : "scale-75 opacity-60"}
+  `}
+>
+  {open ? <Sun /> : "⋆.˚ ☾⭒.˚⏾⋆.˚"}
+</span>
+
+        </button>
+
+        <div
+          className={`
+            grid
+            transition-all
+            duration-300
+            ${
+              open
+                ? "grid-rows-[1fr]"
+                : "grid-rows-[0fr]"
+            }
+          `}
+        >
+
+          <div className="overflow-hidden">
+
+            <p className="px-5 pb-5 text-sm leading-relaxed text-neutral-600">
+              {item.description}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    );
+
+  })} <div className="w-full text-center"> <Button type="openForm">
+    <div className="btnEffect">
+        <span>Your</span>
+        <Sun />
+        <span>Scope</span>
+    </div>
+</Button></div>
 </div>
-</main>
+
+    </main>
+  );
 }

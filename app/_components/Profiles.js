@@ -10,11 +10,11 @@ import useSavedProfiles from '../_lib/hooks/useSavedProfiles';
 
 export function Profiles() {
 
- const {loading, profiles, error, deleteProfile} = useSavedProfiles();
- const { setFormState } = useAstroForm();
+  const {loading, profiles, error, deleteProfile} = useSavedProfiles();
+  const { setFormState } = useAstroForm();
   const router = useRouter();
 
-  // Load profile and navigate
+
   const loadProfile = useCallback(
     (profile) => {
       if (!profile) return;
@@ -24,7 +24,10 @@ export function Profiles() {
     [setFormState, router]
   );
 
+
   if (loading) return <Loader />;
+
+
   if (error)
     return (
       <div className="text-center text-red-500 mt-10">
@@ -33,36 +36,235 @@ export function Profiles() {
       </div>
     );
 
+
   return (
-    <div className="flex flex-col w-full min-h-screen mt-7">
-      <h2 className="sm:tracking-wide text-md sm:text-2xl sm:mx-[4rem] text-center text-[#e89b53]">
-        Saved Charts | save up to 5 charts.
+    <div className="
+      flex
+      flex-col
+      w-full
+      min-h-screen
+      px-4
+      pt-10
+    ">
+
+
+      <h2 className="
+        text-center
+        text-xl
+        sm:text-2xl
+        tracking-wide
+        text-[#947936cc]
+      ">
+        Saved Charts
       </h2>
-  <div className="left-[25%] w-fit relative mt-10">
-  <p>{profiles.length === 0 ? "No charts saved." : ""} <Button type="btnBack" /></p>
-</div>
-      <div className="flex w-full h-fit items-center flex-col">
-        {profiles.map((profile) => {
-  const { user, birthDate, birthTime, birthPlaceData, moment, transitDate, transitTime, transitPlaceData, type } = profile.formState || {};
-  return (
-    <div
-      key={profile.id}
-      onClick={() => loadProfile(profile)}
-      className="relative p-4 flex sm:items-center items-end justify-between w-[90%] sm:w-[70%] bg-[rgb(230,193,85,0.8)] btnGreen cursor-pointer"
-    >
-      <div className="flex flex-col md:flex-row md:gap-7 gap-1 w-full">
-        <span><strong>Natal:</strong></span>
-        <span className="flex-1 border-e border-gray-300">
-          {user}, {birthDate}, {birthTime}, {birthPlaceData?.city?.split(',')[0]}
-        </span>
-        <span><strong>{type === 'birth' ? 'Transit' : 'Synastry'}:</strong></span>
-        <span className="flex-1">
-         {moment}, {transitDate}, {transitTime}, {transitPlaceData?.city?.split(',')[0]}
-        </span>
+
+      <p className="
+        text-center
+        text-sm
+        text-neutral-500
+        mt-2
+      ">
+        Save up to 5 charts.
+      </p>
+
+
+      <div className="
+        mt-8
+        flex
+        justify-center
+      ">
+        <Button type="btnBack"/>
       </div>
-      <Trash onClick={(e) => { e.stopPropagation(); deleteProfile(profile.id); }} />
-    </div> ); })}
+
+
+
+      <div className="
+        flex
+        flex-col
+        items-center
+        gap-5
+        mt-10
+      ">
+
+
+      {profiles.length === 0 && (
+
+        <p className="
+          text-neutral-500
+          mt-10
+        ">
+          No charts saved.
+        </p>
+
+      )}
+
+
+
+      {profiles.map((profile)=>{
+
+
+        const {
+          user,
+          birthDate,
+          birthTime,
+          birthPlaceData,
+          moment,
+          transitDate,
+          transitTime,
+          transitPlaceData,
+          type
+
+        } = profile.formState || {};
+
+
+
+        return (
+
+        <div
+          key={profile.id}
+          onClick={()=>loadProfile(profile)}
+
+          className="
+            group
+            relative
+
+            w-full
+            sm:w-[75%]
+            lg:w-[60%]
+
+            cursor-pointer
+
+            rounded-3xl
+
+            bg-white/35
+            backdrop-blur-md
+
+            border
+            border-white/50
+
+            shadow-md
+
+            p-5
+
+            transition-all
+            duration-300
+
+            hover:-translate-y-1
+            hover:shadow-xl
+          "
+        >
+
+
+          <div className="
+            flex
+            flex-col
+            gap-4
+            pr-8
+          ">
+
+
+            <div>
+
+              <h3 className="
+                text-[#607f6a]
+                font-medium
+                mb-1
+              ">
+                Natal
+              </h3>
+
+
+              <p className="
+                text-sm
+                text-neutral-600
+              ">
+                {user || "Unknown"},
+                {" "}
+                {birthDate},
+                {" "}
+                {birthTime || "Unknown time"},
+                {" "}
+                {birthPlaceData?.city?.split(",")[0]}
+              </p>
+
+            </div>
+
+
+
+            <div className="
+              border-t
+              border-black/10
+              pt-3
+            ">
+
+
+              <h3 className="
+                text-[#607f6a]
+                font-medium
+                mb-1
+              ">
+                {type === "birth" ? "Transit" : "Synastry"}
+              </h3>
+
+
+              <p className="
+                text-sm
+                text-neutral-600
+              ">
+                {moment},
+                {" "}
+                {transitDate},
+                {" "}
+                {transitTime || "Unknown time"},
+                {" "}
+                {transitPlaceData?.city?.split(",")[0]}
+              </p>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <button
+            type="button"
+            onClick={(e)=>{
+              e.stopPropagation();
+              deleteProfile(profile.id);
+            }}
+
+            className="
+              absolute
+              top-4
+              right-4
+
+              opacity-60
+
+              transition-all
+              duration-200
+
+              hover:opacity-100
+              hover:scale-110
+            "
+          >
+
+            <Trash />
+
+          </button>
+
+
+
+        </div>
+
+        )
+
+      })}
+
+
       </div>
+
     </div>
   );
 }
