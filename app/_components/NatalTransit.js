@@ -12,9 +12,11 @@ import CopyContext from './CopyContext';
 import AiChat from './AiChat';
 import useRetroPlanetsAndTimeUnknown from '../_lib/hooks/useRetroPlanetsAndUnknownTime';
 import InfoTable from './InfoTable';
+import { useState } from 'react';
+import ComparisonChartToggle from './ComparisonChartToggle';
 
 export default function NatalTransitWrapper({ chartID }) {
- 
+ const [change, setChange] = useState(false)
   const { natalData, transitData, unknownTime, retro, selected, natalDetails, transitDetails } = useAstroForm();
     
   const type = selected === 'birth' ? 'Transit' : 'Partner'
@@ -41,8 +43,12 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
     if (!natalData || !transitData) return;
 
     const chart = new astrochart.Chart(chartID, 750, 750, settings);
-   
-    chart.radix(natalData).transit(transitData).aspects(calculateAspectsBetweenCharts(natalData, transitData));
+  
+     chart.radix(natalData).transit(transitData).aspects(calculateAspectsBetweenCharts(natalData, transitData));
+      
+     if (change) {
+    chart.radix(transitData).transit(natalData).aspects(calculateAspectsBetweenCharts(transitData, natalData));}
+    
 
     const container = document.getElementById(chartID); if (!container) return;
 
@@ -66,9 +72,10 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
       textEl.setAttribute("x", bbox.x + bbox.width + 3);
       textEl.setAttribute("y", bbox.y + bbox.height / 2);
       svg.appendChild(textEl); });
-
+ 
     return () => {container.innerHTML = "";};
-  }, [chartID, natalData, transitData, unknownTime, retro]);
+   
+  }, [chartID, natalData, transitData, unknownTime, retro, change]);
 
   return (
     <motion.div
@@ -78,6 +85,8 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
       exit={{ opacity: 0, y: -4 }}
       transition={{ duration: 0.4 }}
     >
+      
+
       <div className="flex flex-col-reverse min-[1625px]:flex-row justify-around min-[1625px]:w-full h-fit relative">
         {/* Left panel: tables */}
       
@@ -91,9 +100,12 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
         <div className="relative">
          <div className='w-full flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
                <AspectFilter chartID={chartID}/>
-               <InfoTable></InfoTable></div>
+            <ComparisonChartToggle setChange={setChange} change={change} type={type}/>
+          <InfoTable/>
+
+          </div>
           <div className='flex flex-col'>
-          <div className="min-[1625px]:block flex items-center justify-center h-svw min-[1625px]:h-fit" id={chartID} />
+          <div className="min-[1625px]:block mt-5 md:mt-20 flex items-center justify-center h-svw min-[1625px]:h-fit" id={chartID} />
             <AiChat chartContext={copyChart} chart={chartID}></AiChat>
           </div>
         </div>

@@ -15,7 +15,7 @@ export default function InfoTable () {
   };
 
   return (
-    <div className="text-xs z-20 w-36 md:scale-100 scale-80 text-right  md:mr-0
+    <div className="text-xs z-20 w-36 md:scale-100 scale-80 text-right md:mr-0
     -mr-3">
 
   <button onClick={() => setIsOpen(!isOpen)} className="text-xs
