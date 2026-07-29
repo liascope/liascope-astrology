@@ -193,7 +193,7 @@ mb-80
     ${open ? "scale-110" : "scale-75 opacity-60"}
   `}
 >
-  {open ? <Sun /> : "⋆.˚ ☾⭒.˚⏾⋆.˚"}
+  {open ? <Sun /> : "⋆.˚ ☾ .⭒˚"}
 </span>
 
         </button>
