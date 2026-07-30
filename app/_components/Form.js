@@ -76,12 +76,13 @@ try {
 return (
 <div className="w-full h-fit flex justify-center">
   <form onSubmit={handleSubmit(onSubmit)}> 
-   <fieldset> 
     
+   <fieldset> 
+
  <legend className="flex flex-col items-start w-full p-1 text-[#40584a] font-bold "> 
   <h2 className="text-center">Information</h2>
-  <label> <input type="radio" value="birth" {...register("type")} className={`transition-all duration-100 ${selected === 'birth' ? 'mr-8' : 'mr-2'}`} onClick={handleType}/> Birth and Transit </label>
-  <label> <input type="radio" value="synastry"  {...register("type")} className={`transition-all duration-100 ${selected === 'synastry' ? 'mr-8' : 'mr-2'}`} onClick={handleType} /> Synastry</label>
+  <label> <input type="radio" value="birth" {...register("type")} className={`transition-all duration-100 ${selected === 'birth' ? 'mr-4 md:mr-8' : 'md:mr-2 mr-1'}`} onClick={handleType}/> Birth and Transit </label>
+  <label> <input type="radio" value="synastry"  {...register("type")} className={`transition-all duration-100 ${selected === 'synastry' ? 'mr-4 md:mr-8' : 'md:mr-2 mr-1'}`} onClick={handleType} /> Synastry</label>
 </legend>
 
     <div>

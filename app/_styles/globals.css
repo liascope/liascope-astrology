@@ -30,32 +30,34 @@ button {
 h3 {
   @apply tracking-widest font-semibold
 }
-/* text-[#ba7e47] */
-/* Input Felder */
+
+
 input[type="text"],
 input[type="date"],
 input[type="time"] {
-  @apply w-full px-3 py-2  text-xs sm:text-base mb-1 border border-[#e6c155] rounded-full text-[darkGrey] flex items-center justify-center backdrop-blur-2xl  shadow-sm;
+  @apply w-full px-3 py-2 text-xs sm:text-base mb-1 border border-[#e6c155] rounded-full text-[darkGrey] flex items-center justify-center backdrop-blur-xl bg-white/20 shadow-sm;
 }
 
 input:hover {
   border-color: #e89b53;
 }
  fieldset {
-  @apply flex flex-col md:py-9 md:flex-row justify-center h-fit gap-10 p-3 sm:p-6 text-gray-500}
+  @apply flex flex-1/2 flex-col md:py-9 md:flex-row justify-center h-fit gap-10 p-3 sm:p-6 text-gray-500}
 
 form {
-  @apply flex w-fit h-auto relative sm:flex-row sm:gap-10 gap-3 items-center justify-center md:backdrop-blur-md p-3 sm:p-1 md:p-6 rounded-xl md:shadow-lg mb-40 sm:shadow-none sm:backdrop-blur-none}
+  @apply flex w-fit h-auto relative flex-row sm:gap-10 gap-3 items-center justify-center md:backdrop-blur-md p-3 md:p-6 rounded-xl md:shadow-lg mb-40 sm:shadow-none sm:backdrop-blur-none}
 
 .btnEffect {
   @apply
     inline-flex
     items-center
     justify-center
-    gap-2
+    gap-1 md:gap-2
 
-    px-6
-    py-3
+    px-4 md:px-6
+    py-2 md:py-3
+
+    text-xs sm:text-sm md:text-base
 
     rounded-full
 
@@ -63,8 +65,8 @@ form {
     text-white
 
     font-medium
-    tracking-wide
-
+    tracking-tight md:tracking-wide
+    whitespace-nowrap
     shadow-md
 
     transition-all
@@ -82,7 +84,7 @@ form {
 }
 
 option, select, label {
-  @apply text-sm md:text-base
+  @apply text-xs md:text-base
 }
 /* SVG Data Attributes */
 [data-name="square"],
@@ -112,9 +114,6 @@ option, select, label {
   /* stroke-dasharray: 5 2; */
 }
 
-legend {
-  @apply font-semibold sm:text-xl text-lg text-center tracking-widest
-}
 th, td {
   @apply border border-black p-2 text-center w-4 h-4 box-border;
 }
