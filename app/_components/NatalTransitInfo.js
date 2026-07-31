@@ -39,7 +39,7 @@ return (
 <div key={i} className="space-y-4 py-3 border-b border-black/10">
 <div className="flex flex-row items-center justify-between">
 <h2  className={`font-[Dancing_Script] text-xl md:text-2xl ${d?.type === "Natal" ? "text-[#607f6a]" : "text-[#3f638d]"}`}>
-  {d?.type === 'Natal' ? '☀' : '⏾'} {d?.type} Dates for {d?.name}</h2> {d?.btn && <SaveProfileButton/>}</div>
+  {d?.type === 'Natal' ? '☀' : '☾'} {d?.type} Dates for {d?.name}</h2> {d?.btn && <SaveProfileButton/>}</div>
 
 <div className="space-y-3 text-sm">
 

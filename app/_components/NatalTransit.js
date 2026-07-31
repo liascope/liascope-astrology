@@ -62,7 +62,12 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
       if (el) el.classList.add("hidden");}
 
     // add "r" for retro planets
-    retro?.transit?.forEach((retroPlanet) => {
+
+const retroPlanets = change
+  ? retro?.natal
+  : retro?.transit;
+
+    retroPlanets?.forEach((retroPlanet) => {
       const gEl = svg.querySelector(`g#${chartID}-astrology-transit-planets-${retroPlanet}`); 
       
       if (!gEl) return;

@@ -53,7 +53,8 @@ export function Profiles() {
         text-xl
         sm:text-2xl
         tracking-wide
-        text-[#947936cc]
+        text-[#40584a]
+        
       ">
         Saved Charts
       </h2>
@@ -61,7 +62,7 @@ export function Profiles() {
       <p className="
         text-center
         text-sm
-        text-neutral-500
+       text-neutral-500
         mt-2
       ">
         Save up to 5 charts.

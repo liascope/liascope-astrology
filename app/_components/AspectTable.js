@@ -69,7 +69,7 @@ export default function AspectTable({ aspect }) {
                     justify-center
                     border
                     border-[#947936cc]/20
-                    text-[#947936cc]
+                    text-[#947936d5]
                     font-medium
                     text-xs
                     sm:text-sm

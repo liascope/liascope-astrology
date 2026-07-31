@@ -15,7 +15,7 @@ export default function AspectTableTransitNatal({planets, aspectMatrix}) {
         {aspectMatrix.map((row) => [<div key={`${row.planet}-header`}
             className="text-[#4fa091] md:font-bold font-normal md:text-sm text-xxs lg:text-lg p-1 border border-[#4fa091]/30">
             {symbols.find((s) => s[1] === row.planet)?.[0]}</div>, ...row.aspects.map((symbol, idx) => (
-            <div key={`${row.planet}-${idx}`} className=" text-[#947936cc] border border-[#947936cc]/20 transition-all duration-200 text-xxs md:text-sm lg:text-lg hover:bg-gray-400/10 p-1">
+            <div key={`${row.planet}-${idx}`} className=" text-[#947936d5] border border-[#947936cc]/20 transition-all duration-200 text-xxs md:text-sm lg:text-lg hover:bg-gray-400/10 p-1">
               {symbol}
             </div>))])}
     </div>
