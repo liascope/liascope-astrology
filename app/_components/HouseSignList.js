@@ -27,29 +27,20 @@ export default function HouseSignList({ data }) {
 
 return (
   <div className="w-full flex justify-center text-xs sm:text-sm py-7 my-5">
-
-    <div className="flex gap-5 sm:gap-8">
+    <div className="flex gap-3 md:gap-8">
 
       {/* Houses */}
       {data.cuspList?.length > 0 && (
-        <div className="pr-5 sm:pr-8 border-r border-[#607f6a]/20">
-
+        <div className="pr-3 sm:pr-8 border-r border-[#607f6a]/20">
           <h3 className="mb-3 text-center text-[#607f6a] font-medium tracking-wide">
             Houses
           </h3>
 
           <ul className="space-y-1">
-
             {data.cuspList.map((cusp, i) => (
               <li
                 key={i}
-                className="
-                  grid
-                  grid-cols-[4rem_2rem_4rem]
-                  items-center
-                  gap-4
-                "
-              >
+                className="grid grid-cols-[4rem_2rem_4rem] items-center gap-4 ">
 
                 {/* House name */}
                 <span className="font-medium text-[#40584a]">
@@ -59,12 +50,7 @@ return (
 
                 {/* Position */}
                 <span
-                  className="
-                    text-[10px]
-                    sm:text-xs
-                    text-neutral-500
-                  "
-                >
+                  className="text-[10px] sm:text-xs text-neutral-500">
                   {cusp.position}
                 </span>
 
@@ -73,12 +59,9 @@ return (
                 <span className="text-[#607f6a]">
                   {cusp.sign}
                 </span>
-
               </li>
             ))}
-
           </ul>
-
         </div>
       )}
 
@@ -86,27 +69,18 @@ return (
 
       {/* Planets */}
       <div>
-
         <h3 className="mb-3 text-center text-[#607f6a] font-medium tracking-wide">
           Planets
         </h3>
 
-
         <ul className="space-y-1">
-
           {data.planetList
             ?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))
             ?.map((p, i) => (
-
             <li
               key={i}
-              className="
-                grid
-                grid-cols-[4rem_3rem_1rem_1rem]
-                items-center
-                gap-3
-              "
-            >
+              className=" grid grid-cols-[4rem_3rem_1rem_1rem]
+                items-center gap-3">
 
               {/* Planet */}
               <span className="font-medium text-[#40584a]">
@@ -116,12 +90,7 @@ return (
 
               {/* Position */}
               <span
-                className="
-                  text-[10px]
-                  sm:text-xs
-                  text-neutral-500
-                "
-              >
+                className="text-[10px] sm:text-xs text-neutral-500">
                 {p.position}
               </span>
 
@@ -136,18 +105,11 @@ return (
               <span className="grayscale">
                 {p.symbol}
               </span>
-
-
             </li>
-
           ))}
-
         </ul>
-
       </div>
-
     </div>
-
   </div>
 );
 }
