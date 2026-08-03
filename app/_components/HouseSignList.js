@@ -26,7 +26,7 @@ export default function HouseSignList({ data }) {
   }
 
 return (
-  <div className="w-full flex justify-center text-xs sm:text-sm py-7 my-5">
+  <div className="w-full flex justify-center text-xs sm:text-sm md:text-base py-7 my-5">
     <div className="flex gap-3 md:gap-8">
 
       {/* Houses */}
@@ -40,25 +40,16 @@ return (
             {data.cuspList.map((cusp, i) => (
               <li
                 key={i}
-                className="grid grid-cols-[4rem_2rem_4rem] items-center gap-4 ">
+                className="flex items-center justify-between gap-3 md:gap-5 text-[#40584a]">
 
-                {/* House name */}
-                <span className="font-medium text-[#40584a]">
-                  {cusp.planet}
+                {/* House & Position */}
+                <span className="flex items-center gap-1 md:gap-3 justify-start font-medium ">
+                  {cusp.planet} 
+                  <span className="text-[10px] sm:text-xs text-neutral-500"> {cusp.position}</span>
                 </span>
-
-
-                {/* Position */}
-                <span
-                  className="text-[10px] sm:text-xs text-neutral-500">
-                  {cusp.position}
-                </span>
-
 
                 {/* Sign */}
-                <span className="text-[#607f6a]">
-                  {cusp.sign}
-                </span>
+                <span>{cusp.sign}</span>
               </li>
             ))}
           </ul>
@@ -69,42 +60,27 @@ return (
 
       {/* Planets */}
       <div>
-        <h3 className="mb-3 text-center text-[#607f6a] font-medium tracking-wide">
-          Planets
-        </h3>
+        <h3 className="mb-3 text-center text-[#607f6a] font-medium tracking-wide">Planets</h3>
 
         <ul className="space-y-1">
-          {data.planetList
-            ?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))
-            ?.map((p, i) => (
-            <li
-              key={i}
-              className=" grid grid-cols-[4rem_3rem_1rem_1rem]
-                items-center gap-3">
+          {data.planetList?.filter((p) => !["Mc", "As", "SNode"].includes(p.planet))?.map((p, i) => (
+            <li key={i}
+              className="flex items-center justify-between gap-3 md:gap-5">
 
-              {/* Planet */}
-              <span className="font-medium text-[#40584a]">
-                {p.planet}
-              </span>
-
-
-              {/* Position */}
-              <span
+              {/* Planet & Position */}
+              <span className="flex items-center justify-start font-medium gap-1 md:gap-3 text-[#40584a]">
+                {p.planet}    <span
                 className="text-[10px] sm:text-xs text-neutral-500">
                 {p.position}
               </span>
-
-
-              {/* House */}
-              <span className="text-neutral-500 text-right">
-                {p.house}H
               </span>
 
-
-              {/* Symbol */}
-              <span className="grayscale">
-                {p.symbol}
+              {/* House & Symbol */}
+              <span className="flex items-center gap-1 md:gap-3 text-neutral-500 text-right">
+                {p.house}H 
+                <span className="grayscale">{p.symbol}</span>
               </span>
+
             </li>
           ))}
         </ul>

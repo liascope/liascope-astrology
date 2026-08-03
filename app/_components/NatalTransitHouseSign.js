@@ -25,7 +25,7 @@ return (<div className="grid w-full h-fit my-9 text-center text-[10px] xs:text-x
 
         <div key={`${idx}-Natal`}className="p-0.5 flex flex-col items-center justify-center">
           <span> {row.Natal}</span>
-          <span className="text-[10px] opacity-60">{row.NatalPosition}</span> </div>,
+          <span className="text-[10px] text-neutral-500">{row.NatalPosition}</span> </div>,
 
         <div key={`${idx}-NH`}className=" py-0.5">{row.NH}</div>,
 
@@ -34,7 +34,7 @@ return (<div className="grid w-full h-fit my-9 text-center text-[10px] xs:text-x
         <div key={`${idx}-Transit`}
           className=" py-0.5 flex flex-col items-center justify-center ">
           <span>{row.Transit}</span>
-          <span className=" text-[10px]opacity-60"> {row.TransitPosition}</span> </div>,
+          <span className=" text-[10px] text-neutral-500"> {row.TransitPosition}</span> </div>,
 
         <div key={`${idx}-TH2`} className=" py-0.5">{row.TH2}  </div>,
 
