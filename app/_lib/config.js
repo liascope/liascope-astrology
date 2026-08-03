@@ -37,14 +37,16 @@ export const settings = {CIRCLE_STRONG: 0.2,
   CUSPS_FONT_COLOR : "#000000"};
 
 export const ASPECTS = [
-  { name: "conjunction", angle: 0, orb: 7 },
-  { name: "opposition", angle: 180, orb: 7 },
-  { name: "trine", angle: 120, orb: 5 },
+  { name: "conjunction", angle: 0, orb: 8 },
+  { name: "opposition", angle: 180, orb: 8 },
+  { name: "trine", angle: 120, orb: 6 },
   { name: "square", angle: 90, orb: 7 },
-  { name: "sextile", angle: 60, orb: 4 },
-  { name: "quincunx", angle: 150, orb: 1 },
-  { name: "semiSextile", angle: 30, orb: 1 },
+  { name: "sextile", angle: 60, orb: 5 },
+  { name: "quincunx", angle: 150, orb: 2 },
+  { name: "semiSextile", angle: 30, orb: 2 },
 ];
+
+
 export const houseSystem = {
   "1": "Placidus",
   "2": "Campanus",
