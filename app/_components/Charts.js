@@ -70,7 +70,7 @@ const copyChart = [`${chartName} Chart:`, "",
       <InfoTable></InfoTable>
       </div>
 
-      <div className='flex items-center justify-center md:h-fit' id={chartID}/>
+      <div className='flex items-center justify-center h-dvw md:h-fit' id={chartID}/>
 
       <AiChat chartContext={copyChart} chart={mode === 'horary' ? 'Horary' : chartName} mode={mode} setMode={setMode}/>
        </div>

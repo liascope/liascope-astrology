@@ -108,7 +108,7 @@ const retroPlanets = change
 
           <div className='flex flex-col mt-5 md:mt-20'>
 
-          <div className="flex items-center justify-center h-fit" id={chartID} />
+          <div className="flex items-center justify-center h-dvw md:h-fit" id={chartID} />
 
             <AiChat chartContext={copyChart} chart={chartID}/>
 
