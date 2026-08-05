@@ -52,9 +52,7 @@ export default function SaveProfileButton() {
         <Saved stroke="#4fa091" fill="#4fa091"/>
       )}
        {status === "already" && (
-        <div className="w-fit h-fit flex flex-row item-center justify-center text-xs text-[#4fa091]"><span className="sm:w-20">
-  Already Saved </span><Okay/>
-</div>
+        <div className="w-fit h-fit flex flex-row item-center justify-center text-xs text-[#4fa091]"><span className="sm:w-20"> Already Saved </span><Okay/></div>
       )}
       {status === "limit" && (
         <span className="text-[#ca400d] text-xs ml-2">Storage full!</span>

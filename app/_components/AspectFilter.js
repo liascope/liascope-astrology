@@ -22,61 +22,13 @@ export default function AspectFilter({chartID}) {
   }, [selectedAspect, chartID]);
 
   return (
-   <div
-  className="
-    flex
-    flex-col
-    gap-2
-    text-xs
-    rounded-2xl
-    bg-white/35
-    backdrop-blur-md
-    md:scale-100
-   scale-70
-    border
-    border-white/40
-    shadow-md
-    p-3 
-    md:ml-0
-    -ml-5
-  "
->
-  <label
-    htmlFor="aspectFilter"
-    className="
-      tracking-wide
-      text-[#607f6a]
-      font-medium
-    "
-  >
-    Filter Aspects
-  </label>
+   <div className="flex flex-col gap-2 text-xs rounded-2xl
+    bg-white/35 backdrop-blur-md md:scale-100 scale-70 border border-white/40 shadow-md p-3 md:ml-0 -ml-5">
+  <label htmlFor="aspectFilter"className="tracking-wide text-[#607f6a] font-medium">Filter Aspects</label>
 
-  <select
-    id="aspectFilter"
-    value={selectedAspect}
-    onChange={(e) => setSelectedAspect(e.target.value)}
-    className="
-      rounded-xl
-      border
-      border-[#607f6a]/20
-      bg-white/70
-
-     text-center
-
-      text-[#40584a]
-
-      outline-none
-     px-1
-      transition-all
-      duration-200
-
-      focus:border-[#607f6a]
-      focus:ring-2
-      focus:ring-[#607f6a]/15
-   
-    "
-  >
+  <select id="aspectFilter" value={selectedAspect} onChange={(e) => setSelectedAspect(e.target.value)}
+    className="rounded-xl border border-[#607f6a]/20 bg-white/70 text-center text-[#40584a] outline-none  px-1 transition-all 
+     duration-200 focus:border-[#607f6a] focus:ring-2  focus:ring-[#607f6a]/15">
     <option value="all">All</option>
     <option value="opposition">Opposition</option>
     <option value="square">Square</option>

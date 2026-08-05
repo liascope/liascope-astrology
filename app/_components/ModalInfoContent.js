@@ -25,16 +25,11 @@ export default function ModalInfoContent() {
     <h3>Other Features</h3>
        <div>
         <h3>AI Assistant - Lia</h3>
-        <p>
-Lia provides personalized interpretations based on your chart data. Chats are not stored, but responses can be copied manually.
-Each chart is limited to 2 questions per day.
-        </p>
+        <p>Lia provides personalized interpretations based on your chart data. Chats are not stored, but responses can be copied manually. Each chart is limited to 2 questions per day.</p>
       </div>
         <div>
         <h3>Save Profile</h3>
-        <p>
-Up to 5 profiles can be saved
-        </p>
+        <p>Up to 5 profiles can be saved</p>
       </div>
       <p className="text-xs text-gray-600 py-5">
        Astrology content is provided for informational and entertainment purposes only and should not be considered medical, financial, legal, or psychological advice. <br  />

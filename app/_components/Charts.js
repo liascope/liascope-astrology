@@ -65,9 +65,9 @@ const copyChart = [`${chartName} Chart:`, "",
 
     <div className='relative min-[1150px]:w-[55%] min-w-0'>
 
-    <div className='flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
+    <div className='flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1 w-full'>
       <AspectFilter chartID={chartID}/>
-      <InfoTable></InfoTable>
+      <InfoTable/>
       </div>
 
       <div className='flex items-center justify-center h-dvw md:h-fit' id={chartID}/>

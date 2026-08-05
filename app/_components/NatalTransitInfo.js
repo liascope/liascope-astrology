@@ -61,9 +61,7 @@ return (
 </div>
 </div>
 <div className="text-xs tracking-widest text-right text-neutral-500 uppercase">{d?.houseSystem} Chart</div>
-
 </div>))}
-
 </div> )}
 
 

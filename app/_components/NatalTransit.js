@@ -99,23 +99,16 @@ const retroPlanets = change
 
         {/* Right panel: chart, ai, filter */}
         <div className="relative min-[1000px]:w-[55%] min-w-0">
-
          <div className='w-full flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
             <AspectFilter chartID={chartID}/>
             <ComparisonChartToggle setChange={setChange} change={change} type={type}/>
           <InfoTable/>
           </div>
-
           <div className='flex flex-col mt-5 md:mt-20'>
-
           <div className="flex items-center justify-center h-dvw md:h-fit" id={chartID} />
-
             <AiChat chartContext={copyChart} chart={chartID}/>
-
           </div>
-
         </div>
-    
     </motion.div>
   );
 }

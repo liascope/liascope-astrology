@@ -15,20 +15,10 @@ export default function InfoTable () {
   };
 
   return (
-    <div className="text-xs z-20 w-36 md:scale-100 scale-80 text-right md:mr-0
-    -mr-3">
+    <div className="text-xs z-20 w-36 md:scale-100 scale-80 text-right md:mr-0 -mr-3">
 
-  <button onClick={() => setIsOpen(!isOpen)} className="text-xs
-    rounded-2xl bg-white/35
-    backdrop-blur-md
-    border
-    border-white/40
-    shadow-md
-   tracking-wide
-      text-[#607f6a]
-      font-medium
-    p-3 
-  ">
+  <button onClick={() => setIsOpen(!isOpen)} className="text-xs rounded-2xl bg-white/35 backdrop-blur-md border border-white/40 shadow-md tracking-wide
+      text-[#607f6a] font-medium p-3 ">
         Info {isOpen ?  "▲" : "▼"}
       </button>
 
@@ -36,10 +26,7 @@ export default function InfoTable () {
         {isOpen && (
           <motion.div
             {...fadeZoom}
-            className=" absolute
-    top-full
-    right-0
-    z-10 overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent sm:h-[20rem] h-[10em] p-2"
+            className="absolute top-full right-0 z-10 overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent sm:h-[20rem] h-[10em] p-2"
           >
               <ul className="py-3"> 
                    <h3>Letter Meanings:</h3>
