@@ -38,7 +38,7 @@ export default function Navigation() {
       flex
       justify-center
       px-2
-    
+    flex-1
     ">
 
       <ul className="

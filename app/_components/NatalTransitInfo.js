@@ -25,7 +25,7 @@ const infoData = [{type: 'Natal', name:formState?.user || "...", btn: true,
   houseSystem:  houseSystem[formState?.transitHouseSystem]}]
 
 return (
-<div className="w-full h-fit rounded-3xl backdrop-blur-lg shadow-lg p-6 flex flex-col gap-2 md:gap-6">
+<div className="w-full h-fit rounded-3xl backdrop-blur-lg shadow-lg p-6 flex flex-col gap-2 md:gap-6 flex-1">
 {/* Actions */}
 <div className="flex justify-between items-center gap-3">
 
