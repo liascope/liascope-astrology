@@ -29,7 +29,7 @@ const {currentDate} = useCurrentDateTime();
 
   return (
 <div
-  className={`flex flex-col rounded-lg border border-white/20 mx-5 backdrop-blur-xl p-3 sm:p-6 shadow-lg transition-all duration-300 w-auto ${
+  className={`flex flex-col rounded-lg border border-white/20 bg-white/10 backdrop-blur-xl mx-5 p-3 sm:p-6 shadow-lg transition-all duration-300 w-auto ${
     expanded ? "h-[650px]" : "h-[420px] relative"
   }`}
 >
@@ -66,7 +66,7 @@ const {currentDate} = useCurrentDateTime();
                    {msg.content} 
                   </ReactMarkdown>
                   {msg.role === "assistant" && idx !== 0 && (
-              <CopyContext copy={msg.content} title='Copy Reading' padding='pr-2'/>
+              <CopyContext copy={msg.content} title='Copy Reading' note={false} style='pr-2'/>
                    )}
           </div>
         ))}

@@ -4,7 +4,7 @@ export const NOMINATIM_URL= "https://nominatim.openstreetmap.org/search?q="
 export const actualYear = new Date().getFullYear();
 
 // AiChat question limit
-export const MAX_PER_DAY = 2;
+export const MAX_PER_DAY = 5;
 
 
 // export const DEFAULT_HOUSE_SYSTEM= "1"; 

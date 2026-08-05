@@ -42,7 +42,7 @@ useRetroPlanetsAndTimeUnknown(chartID, retro, unknownTime);
   useEffect(() => {
     if (!natalData || !transitData) return;
 
-    const chart = new astrochart.Chart(chartID, 750, 750, settings);
+    const chart = new astrochart.Chart(chartID, 900, 900, settings);
   
      chart.radix(natalData).transit(transitData).aspects(calculateAspectsBetweenCharts(natalData, transitData));
       
@@ -84,38 +84,38 @@ const retroPlanets = change
 
   return (
     <motion.div
-      className="min-[1625px]:w-full"
+      className="flex flex-row max-[1000px]:flex-col-reverse w-full justify-between"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -4 }}
       transition={{ duration: 0.4 }}
     >
-      
-
-      <div className="flex flex-col-reverse min-[1625px]:flex-row justify-around min-[1625px]:w-full h-fit relative">
         {/* Left panel: tables */}
-      
-        <div className="flex flex-col min-[1625px]:items-baseline items-center min-[1625px]:w-[40rem] h-fit gap-5">
+        <div className="min-[1000px]:w-[45%] min-w-0 h-fit flex flex-col gap-10">
            <CopyContext copy={copyChart}/>
           <NatalTransitHouseSign comparison={comparison} selected={selected} />
           <AspectTableTransitNatal planets={planets} aspects={aspects} aspectMatrix={aspectMatrix} />
         </div>
 
-        {/* Right panel: chart + filter */}
-        <div className="relative">
+        {/* Right panel: chart, ai, filter */}
+        <div className="relative min-[1000px]:w-[55%] min-w-0">
+
          <div className='w-full flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
-               <AspectFilter chartID={chartID}/>
+            <AspectFilter chartID={chartID}/>
             <ComparisonChartToggle setChange={setChange} change={change} type={type}/>
           <InfoTable/>
+          </div>
+
+          <div className='flex flex-col mt-5 md:mt-20'>
+
+          <div className="flex items-center justify-center h-fit" id={chartID} />
+
+            <AiChat chartContext={copyChart} chart={chartID}/>
 
           </div>
-          <div className='flex flex-col'>
-          <div className="min-[1625px]:block mt-5 md:mt-20 flex items-center justify-center h-svw min-[1625px]:h-fit" id={chartID} />
-            <AiChat chartContext={copyChart} chart={chartID}></AiChat>
-          </div>
+
         </div>
-      </div>
-     
+    
     </motion.div>
   );
 }

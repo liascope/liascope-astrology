@@ -47,32 +47,34 @@ const copyChart = [`${chartName} Chart:`, "",
 
   return (
     <motion.div
-      className="flex flex-row max-[1000px]:flex-col-reverse w-full justify-between"
+      className="flex flex-row max-[1150px]:flex-col-reverse w-full justify-between"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -7 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="min-[1000px]:w-[40%] min-w-0 h-fit flex flex-col">
-  
-        <div className="min-[1000px]:w-full flex flex-col gap-5 ">
+
+      <div className="min-[1150px]:w-[45%] min-w-0 h-fit flex flex-col">
+        <div className="min-[1150px]:w-full flex flex-col gap-7">
           <CopyContext copy={copyChart}/>
+       
         <HouseSignList data={{ planetList, cuspList }} />
         <AspectTable aspect={aspect} />
        </div>  
       </div>
 
-    <div className='relative min-[1000px]:w-[60%] min-w-0'>
+    <div className='relative min-[1150px]:w-[55%] min-w-0'>
 
-    <div className='w-full flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
+    <div className='flex flex-row items-start justify-between absolute md:top-2 -top-10 z-25 px-1'>
       <AspectFilter chartID={chartID}/>
       <InfoTable></InfoTable>
-      
       </div>
 
-      <div className='flex items-center justify-center max-[1000px]:h-svw' id={chartID}/>
+      <div className='flex items-center justify-center md:h-fit' id={chartID}/>
+
       <AiChat chartContext={copyChart} chart={mode === 'horary' ? 'Horary' : chartName} mode={mode} setMode={setMode}/>
        </div>
+
     </motion.div>
   );
 }

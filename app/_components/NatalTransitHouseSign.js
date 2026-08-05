@@ -1,6 +1,6 @@
 export default function NatalTransitHouseSign ({comparison, selected}) {
 
-return (<div className="grid w-full h-fit my-9 text-center text-[10px] xs:text-xs sm:text-sm overflow-hidden rounded-2xl backdrop-blur-sm"
+return (<div className="grid w-full h-fit text-center text-[10px] xs:text-xs sm:text-sm overflow-hidden rounded-2xl backdrop-blur-sm"
 
       style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))", }}>
 

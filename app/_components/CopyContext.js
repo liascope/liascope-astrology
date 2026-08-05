@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 
-export default function CopyContext({ copy }) {
+export default function CopyContext({ copy, note = 'true', style='pr-5 sm:pr-10 md:pr-7 lg:pr-10 pt-10', title = 'Copy Chart'}) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -14,8 +14,8 @@ export default function CopyContext({ copy }) {
   };
 
   return (
-    <div className="relative group flex justify-end -mb-7 pt-5 pr-10 gap-1 w-full">
-  <span className="text-xs text-black/20 font-bold tracking-widest">Copy Chart</span>
+    <div className={`relative group flex justify-end w-full gap-1 ${style}`}>
+  {note && <span className="text-xs text-black/20 font-bold tracking-widest">Copy Chart</span>}
       {/* Tooltip */}
       <div
         className={`
@@ -34,7 +34,7 @@ export default function CopyContext({ copy }) {
       <button
         onClick={handleCopy}
         className="text-black/40 hover:text-black/80 transition"
-        title='Copy Chart'
+        title={title}
       >
         {copied ? <Check size={16} /> : <Copy size={16} />}
       </button>

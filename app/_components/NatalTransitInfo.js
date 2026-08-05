@@ -28,11 +28,11 @@ return (
 <div className="w-full h-fit rounded-3xl backdrop-blur-lg shadow-lg p-6 flex flex-col gap-2 md:gap-6">
 {/* Actions */}
 <div className="flex justify-between items-center gap-3">
+
 <Button type="savedCharts"/>
-
-<div className="h-6w-px bg-[#e89b53]/30"/>
-
-<Button type="openForm"><Edit/></Button>
+<Button type="openForm">
+  <Edit/>
+  </Button>
 </div>
 
 {infoData?.map((d,i) => (

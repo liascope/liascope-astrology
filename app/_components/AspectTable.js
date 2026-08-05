@@ -5,12 +5,7 @@ export default function AspectTable({ aspect }) {
   const planetNames = symbols.map((s) => s[1]);
 
  return (
-  <div className="w-full flex justify-center py-2">
-
-    <div className="w-[min(96vw,420px)] sm:w-[min(90vw,520px)]">
-
-      <div
-        className="grid overflow-hidden"
+ <div className="grid items-center p-1 md:p-7 overflow-hidden"
         style={{ gridTemplateColumns: `repeat(${planetNames.length}, minmax(0, 1fr))`, }}>
         {planetNames.map((planet, i) => {const planetAspects = aspect?.filter((a) => a.includes(planet));
 
@@ -29,8 +24,7 @@ export default function AspectTable({ aspect }) {
               const symbol = asp ? getSymbolFromAspect(asp) : "";
 
               return (
-                <div key={`cell-${i}-${j}`} className="
-                    aspect-square flex items-center justify-center border border-[#947936cc]/20 text-[#947936d5] font-bold text-xs sm:text-sm md:text-base transition-colors duration-200 hover:bg-stone-400/20">
+                <div key={`cell-${i}-${j}`} className="aspect-square flex items-center justify-center border border-[#947936cc]/20 text-[#947936d5] font-bold text-xs sm:text-sm md:text-base transition-colors duration-200 hover:bg-stone-400/20">
                   {symbol}
                 </div>
               );
@@ -43,9 +37,5 @@ export default function AspectTable({ aspect }) {
           ];
         })}
       </div>
-
-    </div>
-
-  </div>
 );
 }
