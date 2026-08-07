@@ -5,7 +5,7 @@ export default function AspectTable({ aspect }) {
   const planetNames = symbols.map((s) => s[1]);
 
  return (
- <div className="grid items-center p-1 md:p-7 overflow-hidden"
+ <div className="grid items-center overflow-hidden"
         style={{ gridTemplateColumns: `repeat(${planetNames.length}, minmax(0, 1fr))`, }}>
         {planetNames.map((planet, i) => {const planetAspects = aspect?.filter((a) => a.includes(planet));
 

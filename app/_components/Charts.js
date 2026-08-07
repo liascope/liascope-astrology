@@ -54,14 +54,11 @@ const copyChart = [`${chartName} Chart:`, "",
       transition={{ duration: 0.4 }}
     >
 
-      <div className="min-[1150px]:w-[45%] min-w-0 h-fit flex flex-col">
-        <div className="min-[1150px]:w-full flex flex-col gap-7">
+      <div className="min-[1150px]:w-[45%] min-w-0 flex flex-col gap-7 p-1 md:p-7">
           <CopyContext copy={copyChart}/>
-       
         <HouseSignList data={{ planetList, cuspList }} />
         <AspectTable aspect={aspect} />
        </div>  
-      </div>
 
     <div className='relative min-[1150px]:w-[55%] min-w-0'>
 
