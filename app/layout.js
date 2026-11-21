@@ -4,6 +4,7 @@ import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import Provider from "./_components/Provider";
 import CookieBanner from "./_components/CookieBanner";
+import { Analytics } from '@vercel/analytics/next'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +40,8 @@ export default function RootLayout({ children }) {
         <Header />
         <Provider>
           <main className="flex-1 w-full">
-            {children}
+            {children}  
+              <Analytics />
           </main>
         </Provider>
         <CookieBanner />
